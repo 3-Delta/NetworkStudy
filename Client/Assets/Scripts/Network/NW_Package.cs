@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Net;
 using System.IO;
+using System.Net.Sockets;
 
 /// <summary>
 /// 之前存在一个疑问：就是为什么只是针对于NW_PackageHead的size和protoType进行大小端的转换，而不对于NW_PackageBody的bodyBytes进行大小端的转换呢？
@@ -47,7 +48,7 @@ public class NW_PackageBody
 {
     public const ushort PACKAGE_BODY_SIZE = ushort.MaxValue;
     public byte[] bodyBytes = new byte[PACKAGE_BODY_SIZE];
-    public ushort bodySize = 0;
+    public int bodySize = 0;
 
     public void ResetSize() { bodySize = 0; }
     public byte[] Encode()
@@ -77,6 +78,7 @@ public class NW_Package
 {
     public NW_PackageHead head = new NW_PackageHead();
     public NW_PackageBody body = new NW_PackageBody();
+    public Socket socket = null;
 
     public byte[] Encode()
     {
