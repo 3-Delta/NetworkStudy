@@ -4,3 +4,6 @@
 /Client/Temp
 /Client/Client.csproj
 /Client/Client.Editor.csproj
+/Client/obj
+/Client/UnityPackageManager
+/Client/Packages

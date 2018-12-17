@@ -1,0 +1,7 @@
+syntax = "proto3";
+package com.kaclok.game;
+
+message mail
+{
+	uint32 mailID = 1;
+}
