@@ -1,9 +1,17 @@
-echo off
-set curPath=%cd%
-set destPath=%curPath:Tools:\proto=Client\Assets\Scripts\Network\Protos%
-echo %destPath%
+:: https://www.jianshu.com/p/48c71e7359d3
+:: https://www.cnblogs.com/DswCnblog/p/5432326.html
 
-google\bin\protoc.exe --csharp_out=%destPath% Test.proto
+@echo off
+set curPath=%cd%
+echo curPath = %curPath%
+
+set sourcePath=%curPath:Tools\Network=Resources\Protos%
+echo sourcePath = %sourcePath%
+
+set destPath=%curPath:Tools\Network=Client\Assets\Scripts\Network\Protos%
+echo destPath = %destPath%
+
+google\bin\protoc.exe -I=%sourcePath% --csharp_out=%destPath% Mail.proto
 
 pause
 echo "Press any key to exit!"
