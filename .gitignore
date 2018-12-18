@@ -7,3 +7,11 @@
 /Client/obj
 /Client/UnityPackageManager
 /Client/Packages
+/Server/UnityServer/Server/Library
+/Server/UnityServer/Server/Temp
+/Server/UnityServer/Server/.vs
+/Server/UnityServer/Server/obj
+/Server/UnityServer/Server/Assembly-CSharp.csproj
+/Server/UnityServer/Server/Server.sln
+/Client/Assembly-CSharp.csproj
+/Client/Assembly-CSharp-Editor.csproj
