@@ -9,7 +9,7 @@ using System.Net.Sockets;
 /// 之前存在一个疑问：就是为什么只是针对于NW_PackageHead的size和protoType进行大小端的转换，而不对于NW_PackageBody的bodyBytes进行大小端的转换呢？
 /// 首先需要知道大小端其实是对于大于一个字节的数据类型的内部字节顺序的问题。那么后面的因为都是byte，都是一个字节，所以就不需要进行大小端的转换。
 /// </summary>
-public class NW_PackageHead
+public struct NW_PackageHead
 {
     // 2字节,控制单个包体大小
     public ushort size;
@@ -27,8 +27,7 @@ public class NW_PackageHead
         Array.Copy(typeBytes, 0, headBytes, sizeof(ushort), typeBytes.Length);
         return headBytes;
     }
-
-    public void Decode(byte[] bytes, int startIndex)
+    public void Decode(byte[] bytes, int startIndex = 0)
     {
         if (bytes != null)
         {
@@ -38,48 +37,48 @@ public class NW_PackageHead
             protoType = (ushort)IPAddress.NetworkToHostOrder(protoType);
         }
     }
-    public void Decode(byte[] bytes)
-    {
-        Decode(bytes, 0);
-    }
 }
 
-public class NW_PackageBody
+public struct NW_PackageBody
 {
     public const ushort PACKAGE_BODY_SIZE = ushort.MaxValue;
-    public byte[] bodyBytes = new byte[PACKAGE_BODY_SIZE];
-    public int bodySize = 0;
+    public byte[] bodyBytes;
+    public int bodySize;
 
-    public void ResetSize() { bodySize = 0; }
-    public byte[] Encode()
+    public void ResetSize()
     {
-        return bodyBytes;
+        bodyBytes = null;
+        bodySize = 0;
     }
-
-    public void Decode(byte[] bytes, int startIndex)
+    public byte[] Encode() { return bodyBytes; }
+    public void Decode(byte[] bytes, int startIndex = 0)
     {
         if (bytes != null && bytes.Length > startIndex)
         {
             bodySize = (ushort)(bytes.Length - startIndex);
+            bodyBytes = new byte[bodySize];
             Array.Copy(bytes, 0, bodyBytes, 0, bodySize);
         }
-        else
-        {
-            ResetSize();
-        }
-    }
-    public void Decode(byte[] bytes)
-    {
-        Decode(bytes, 0);
+        else { ResetSize(); }
     }
 }
 
-public class NW_Package
+public struct NW_Package
 {
-    public NW_PackageHead head = new NW_PackageHead();
-    public NW_PackageBody body = new NW_PackageBody();
-    public Socket socket = null;
+    public NW_PackageHead head;
+    public NW_PackageBody body;
+    public Socket socket;
 
+    public NW_Package(NW_PackageHead head, NW_PackageBody body, Socket socket = null)
+    {
+        this.head = head;
+        this.body = body;
+        this.socket = socket;
+    }
+    public void Reset()
+    {
+        socket = null;
+    }
     public byte[] Encode()
     {
         int bodySize = body.bodySize < 0 ? 0 : body.bodySize;
@@ -99,11 +98,5 @@ public class NW_Package
         head.Decode(bytes, 0);
         body.Decode(bytes, NW_PackageHead.PACKAGE_HEAD_SIZE);
     }
-    public void Decode(MemoryStream stream)
-    {
-        if (stream != null)
-        {
-            Decode(stream.ToArray());
-        }
-    }
+    public void Decode(MemoryStream stream) { Decode(stream?.ToArray()); }
 }

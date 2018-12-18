@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 
+// https://www.jianshu.com/p/fa959d16eaed
 public static class NW_Mgr
 {
     private static Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
