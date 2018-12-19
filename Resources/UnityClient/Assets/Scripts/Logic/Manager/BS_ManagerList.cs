@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System.Linq;
+using UnityClient;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -20,5 +21,6 @@ public static class BS_ManagerList
 {
     public readonly static List<BS_ManagerBaseCallback> list = new List<BS_ManagerBaseCallback>()
     {
+        BS_NwMgr.Instance,
     };
 }

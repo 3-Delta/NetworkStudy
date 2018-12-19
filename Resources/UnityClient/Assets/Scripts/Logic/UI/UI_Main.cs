@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityClient;
 
 public class UI_Main : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class UI_Main : MonoBehaviour
 
     private void OnBtnLunchClicked()
     {
+        BS_NwMgr.Instance.Lunch();
     }
     private void OnBtnMailClicked()
     {
