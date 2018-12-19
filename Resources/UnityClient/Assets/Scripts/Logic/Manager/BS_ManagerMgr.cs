@@ -26,6 +26,10 @@ public class BS_ManagerMgr : BS_ManagerBase<BS_ManagerMgr>
     {
         BS_ManagerList.list.ForEach(mgr => { mgr.OnUpdate(); });
     }
+    public override void OnFixedUpdate(float fixedDeltaTime)
+    {
+        BS_DriveMgr.Instance.OnFixedUpdate(fixedDeltaTime);
+    }
     public override void OnExit()
     {
         BS_ManagerList.list.ForEach(mgr => { mgr.OnExit(); });

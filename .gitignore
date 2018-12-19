@@ -32,3 +32,6 @@
 /Resources/UnityServer/Server.sln
 /Resources/UnityClient/Packages
 /Client/packages.config
+/Resources/UnityClient/*.sln
+/Resources/UnityClient/ProjectSettings/ProjectVersion.txt
+/Resources/UnityServer/ProjectSettings/ProjectVersion.txt

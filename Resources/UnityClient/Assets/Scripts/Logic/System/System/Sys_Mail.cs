@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityClient;
 using System;
 
 public class Sys_Mail : BS_SystemBase<Sys_Mail>

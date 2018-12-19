@@ -7,7 +7,6 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System.Linq;
-using UnityClient;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -19,8 +18,17 @@ using UnityEditor;
 
 public static class BS_ManagerList
 {
+    // BS_ManagerMgr和BS_DriveMgr不能放入
     public readonly static List<BS_ManagerBaseCallback> list = new List<BS_ManagerBaseCallback>()
     {
         BS_NwMgr.Instance,
+        BS_AIMgr.Instance,
+        BS_CameraMgr.Instance,
+        BS_FxMgr.Instance,
+        BS_QualityMgr.Instance,
+        BS_ResourceMgr.Instance,
+        BS_SceneMgr.Instance,
+        BS_TimeMgr.Instance,
+        BS_UIMgr.Instance,
     };
 }

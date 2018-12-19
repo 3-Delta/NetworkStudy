@@ -20,6 +20,7 @@ public class BS_ManagerBaseCallback
 {
     public virtual void OnInit() { }
     public virtual void OnUpdate() { }
+    public virtual void OnFixedUpdate(float fixedDeltaTime) { }
     public virtual void OnExit() { }
 }
 

@@ -10,14 +10,18 @@ public class App : MonoBehaviour
     }
     private void Init()
     {
-        BS_LogicMgr.OnInit();
+        BS_LogicMgr.Instance.OnInit();
     }
     private void Update()
     {
-        BS_LogicMgr.Update();
+        BS_LogicMgr.Instance.OnUpdate();
+    }
+    private void FixedUpdate()
+    {
+        BS_LogicMgr.Instance.OnFixedUpdate(Time.fixedDeltaTime);
     }
     private void OnApplicationQuit()
     {
-        BS_LogicMgr.OnExit();
+        BS_LogicMgr.Instance.OnExit();
     }
 }
