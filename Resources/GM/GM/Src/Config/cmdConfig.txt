@@ -1,0 +1,5 @@
+addlevel 5
+setlevel 21
+setexp 9000
+help
+sendmail cuibinbin hello nicetomeetyou!

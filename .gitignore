@@ -35,3 +35,8 @@
 /Resources/UnityClient/*.sln
 /Resources/UnityClient/ProjectSettings/ProjectVersion.txt
 /Resources/UnityServer/ProjectSettings/ProjectVersion.txt
+/Resources/UnityServer/UnityServer.sln
+/Resources/GM/.vs
+/Resources/GM/GM.sln
+/Resources/GM/GM/obj
+/Resources/GM/GM/bin
