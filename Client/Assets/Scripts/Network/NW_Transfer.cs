@@ -143,5 +143,16 @@ public class NW_Transfer
     #endregion
 
     #region // 收发数据
+    public void Send()
+    {
+        if (IsConnected)
+        {
+
+        }
+    }
+    public void Receive()
+    {
+
+    }
     #endregion
 }
