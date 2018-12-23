@@ -11,17 +11,17 @@ using System.Net.Sockets;
 /// </summary>
 public struct NW_PackageHead
 {
-    // 2字节,控制单个包体大小
-    public ushort size;
-    public ushort protoType;
-    public const ushort PACKAGE_HEAD_SIZE = sizeof(ushort) + sizeof(ushort);
+    // 2字节,控制单个包体大小[不包括包头]
+    public ushort size { get; private set; }
+    public ushort protoType { get; private set; }
+    
 
     public byte[] Encode()
     {
         // 针对大小端设备统一进行字节顺序转换
         byte[] sizeBytes = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(size));
         byte[] typeBytes = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(protoType));
-        int byteCount = PACKAGE_HEAD_SIZE;
+        int byteCount = Def.PACKAGE_HEAD_SIZE;
         byte[] headBytes = new byte[byteCount];
         Array.Copy(sizeBytes, 0, headBytes, 0, sizeBytes.Length);
         Array.Copy(typeBytes, 0, headBytes, sizeof(ushort), typeBytes.Length);
@@ -41,15 +41,10 @@ public struct NW_PackageHead
 
 public struct NW_PackageBody
 {
-    public const ushort PACKAGE_BODY_SIZE = ushort.MaxValue;
-    public byte[] bodyBytes;
-    public int bodySize;
+    public byte[] bodyBytes { get; private set; }
+    public int bodySize { get; set; }
 
-    public void ResetSize()
-    {
-        bodyBytes = null;
-        bodySize = 0;
-    }
+    public void Clear() { bodySize = 0; }
     public byte[] Encode() { return bodyBytes; }
     public void Decode(byte[] bytes, int startIndex = 0)
     {
@@ -59,7 +54,6 @@ public struct NW_PackageBody
             bodyBytes = new byte[bodySize];
             Array.Copy(bytes, 0, bodyBytes, 0, bodySize);
         }
-        else { ResetSize(); }
     }
 }
 
@@ -67,22 +61,17 @@ public struct NW_Package
 {
     public NW_PackageHead head;
     public NW_PackageBody body;
-    public Socket socket;
 
-    public NW_Package(NW_PackageHead head, NW_PackageBody body, Socket socket = null)
+    public NW_Package(NW_PackageHead head, NW_PackageBody body)
     {
         this.head = head;
         this.body = body;
-        this.socket = socket;
     }
-    public void Reset()
-    {
-        socket = null;
-    }
+    public void Clear() { }
     public byte[] Encode()
     {
         int bodySize = body.bodySize < 0 ? 0 : body.bodySize;
-        byte[] totalBytes = new byte[NW_PackageHead.PACKAGE_HEAD_SIZE + bodySize];
+        byte[] totalBytes = new byte[Def.PACKAGE_HEAD_SIZE + bodySize];
         byte[] headBytes = head.Encode();
         byte[] bodyBytes = body.Encode();
         Array.Copy(headBytes, 0, totalBytes, 0, headBytes.Length);
@@ -92,11 +81,4 @@ public struct NW_Package
         }
         return totalBytes;
     }
-
-    public void Decode(byte[] bytes)
-    {
-        head.Decode(bytes, 0);
-        body.Decode(bytes, NW_PackageHead.PACKAGE_HEAD_SIZE);
-    }
-    public void Decode(MemoryStream stream) { Decode(stream?.ToArray()); }
 }
