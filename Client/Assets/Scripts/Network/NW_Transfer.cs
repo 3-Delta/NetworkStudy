@@ -124,7 +124,7 @@ public class NW_Transfer
             else
             {
                 // 入队
-                package.body.Decode(buffer.buffer);
+                package.body.Decode(buffer.buffer, package.head.size);
                 queue.Enqueue(package);
 
                 buffer.Clear();

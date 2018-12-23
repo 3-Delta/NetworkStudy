@@ -42,17 +42,17 @@ public struct NW_PackageHead
 public struct NW_PackageBody
 {
     public byte[] bodyBytes { get; private set; }
-    public int bodySize { get; set; }
+    public int bodySize { get; private set; }
 
     public void Clear() { bodySize = 0; }
     public byte[] Encode() { return bodyBytes; }
-    public void Decode(byte[] bytes, int startIndex = 0)
+    public void Decode(byte[] bytes, int bodySize, int startIndex = 0)
     {
-        if (bytes != null && bytes.Length > startIndex)
+        if (bytes != null && bodySize > 0 && bytes.Length > startIndex)
         {
-            bodySize = (ushort)(bytes.Length - startIndex);
+            this.bodySize = bodySize;
             bodyBytes = new byte[bodySize];
-            Array.Copy(bytes, 0, bodyBytes, 0, bodySize);
+            Array.Copy(bytes, startIndex, bodyBytes, 0, bodySize);
         }
     }
 }
