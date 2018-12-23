@@ -8,6 +8,7 @@ using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GM.Src.Network;
 
 namespace GM
 {
@@ -16,6 +17,8 @@ namespace GM
         public GM()
         {
             InitializeComponent();
+            NetworkMgr.Instance.Init();
+            NetworkMgr.Instance.Lunch();
             RegisterCallback();
             LoadServerList();
         }
@@ -187,7 +190,8 @@ namespace GM
         }
         private void ReqServer(string cmd, string arg)
         {
-
+            Proto_GM msg = new Proto_GM();
+            NetworkMgr.Instance.connection.Send(T_MsgType.reqGM, msg);
         }
     }
 }
