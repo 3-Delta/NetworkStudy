@@ -14,17 +14,21 @@ public struct NW_PackageHead
     // 2字节,控制单个包体大小[不包括包头]
     public ushort size { get; private set; }
     public ushort protoType { get; private set; }
-    
 
+    public NW_PackageHead(ushort protoType, ushort size)
+    {
+        this.protoType = protoType;
+        this.size = size;
+    }
     public byte[] Encode()
     {
         // 针对大小端设备统一进行字节顺序转换
         byte[] sizeBytes = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(size));
         byte[] typeBytes = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(protoType));
-        int byteCount = Def.PACKAGE_HEAD_SIZE;
+        int byteCount = NW_Def.PACKAGE_HEAD_SIZE;
         byte[] headBytes = new byte[byteCount];
-        Array.Copy(sizeBytes, 0, headBytes, 0, sizeBytes.Length);
-        Array.Copy(typeBytes, 0, headBytes, sizeof(ushort), typeBytes.Length);
+        Buffer.BlockCopy(sizeBytes, 0, headBytes, 0, sizeBytes.Length);
+        Buffer.BlockCopy(typeBytes, 0, headBytes, sizeof(ushort), typeBytes.Length);
         return headBytes;
     }
     public void Decode(byte[] bytes, int startIndex = 0)
@@ -43,43 +47,49 @@ public struct NW_PackageBody
 {
     // bodyBytes的长度不定，但是存在一个上限值，如果超过上限值，如何处理？
     public byte[] bodyBytes { get; private set; }
-    public int bodySize { get; private set; }
 
-    public void Clear() { bodySize = 0; }
+    // public NW_PackageBody(byte[] bytes) { Decode(bytes, 0); }
+    public void Clear() { }
     public byte[] Encode() { return bodyBytes; }
-    public void Decode(byte[] bytes, int bodySize, int startIndex = 0)
+    public void Decode(byte[] bytes, int startIndex = 0)
     {
-        if (bytes != null && bodySize > 0 && bytes.Length > startIndex)
+        if (bytes != null && bytes.Length > startIndex)
         {
-            this.bodySize = bodySize;
+            int bodySize = bytes.Length - startIndex;
             bodyBytes = new byte[bodySize];
-            Array.Copy(bytes, startIndex, bodyBytes, 0, bodySize);
+            Buffer.BlockCopy(bytes, startIndex, bodyBytes, 0, bodySize);
         }
     }
 }
 
 public struct NW_Package
 {
-    public NW_PackageHead head;
-    public NW_PackageBody body;
+    public NW_PackageHead head { get; private set; }
+    public NW_PackageBody body { get; private set; }
 
-    public NW_Package(NW_PackageHead head, NW_PackageBody body)
+    public NW_Package(ushort protoType, byte[] bytes)
     {
-        this.head = head;
-        this.body = body;
+        head = new NW_PackageHead(protoType, (ushort)bytes.Length);
+        body = new NW_PackageBody();
+        body.Decode(bytes, 0);
     }
     public void Clear() { }
     public byte[] Encode()
     {
-        int bodySize = body.bodySize < 0 ? 0 : body.bodySize;
-        byte[] totalBytes = new byte[Def.PACKAGE_HEAD_SIZE + bodySize];
+        int bodySize = body.bodyBytes.Length < 0 ? 0 : body.bodyBytes.Length;
+        byte[] totalBytes = new byte[NW_Def.PACKAGE_HEAD_SIZE + bodySize];
         byte[] headBytes = head.Encode();
         byte[] bodyBytes = body.Encode();
-        Array.Copy(headBytes, 0, totalBytes, 0, headBytes.Length);
+        Buffer.BlockCopy(headBytes, 0, totalBytes, 0, headBytes.Length);
         if (bodySize > 0)
         {
-            Array.Copy(bodyBytes, 0, totalBytes, headBytes.Length, bodySize);
+            Buffer.BlockCopy(bodyBytes, 0, totalBytes, headBytes.Length, bodySize);
         }
         return totalBytes;
+    }
+    public void Decode(byte[] bytes)
+    {
+        head.Decode(bytes, 0);
+        body.Decode(bytes, NW_Def.PACKAGE_HEAD_SIZE);
     }
 }

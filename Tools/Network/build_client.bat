@@ -11,6 +11,7 @@ echo sourcePath = %sourcePath%
 set destPath=%curPath:Tools\Network=Client\Assets\Scripts\Network\Protos%
 echo destPath = %destPath%
 
+google\bin\protoc.exe -I=%sourcePath% --csharp_out=%destPath% Common.proto
 google\bin\protoc.exe -I=%sourcePath% --csharp_out=%destPath% Mail.proto
 
 pause

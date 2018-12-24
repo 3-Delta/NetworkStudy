@@ -1,7 +1,39 @@
 syntax = "proto3";
-package com.kaclok.game;
+package Protobuf_Net;
 
-message mail
+import "Common.proto";
+
+enum MailErrCode
 {
-	uint32 mailID = 1;
+	HasCollected = 0; 
+}
+
+enum EMailReadState
+{
+	UnRead = 0;	// 第一个枚举值必须是0
+	Readed = 1;
+}
+enum EMailAttachmentState
+{
+	UnCollected = 0;
+	Collected = 1;
+}
+
+message Mail
+{
+	uint64 mailID = 1;
+	uint32 sendTime = 2;
+	bytes sender = 3;
+	bytes content = 4;
+	repeated Item attachments = 5;
+}
+
+message CSReadMail
+{
+	uint64 mailID = 1;
+}
+
+message SCReadMail
+{
+	uint64 mailID = 1;
 }

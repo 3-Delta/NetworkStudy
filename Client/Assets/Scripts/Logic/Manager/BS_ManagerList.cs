@@ -20,5 +20,6 @@ public static class BS_ManagerList
 {
     public readonly static List<BS_ManagerBaseCallback> list = new List<BS_ManagerBaseCallback>()
     {
+        NW_Mgr.Instance,
     };
 }

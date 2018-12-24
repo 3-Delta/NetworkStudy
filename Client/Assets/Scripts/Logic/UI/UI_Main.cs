@@ -19,6 +19,6 @@ public class UI_Main : MonoBehaviour
     }
     private void OnBtnMailClicked()
     {
-        Sys_Mail.Instance.ReqReadMail();
+        Sys_Mail.Instance.ReqwReadMail();
     }
 }

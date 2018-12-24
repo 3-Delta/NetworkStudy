@@ -1,0 +1,12 @@
+syntax = "proto3";
+package Protobuf_Net;
+
+// 拓展proto，支持nullable
+// https://www.codercto.com/a/10882.html
+// https://github.com/criteo-forks/protobuf/commit/8298aff178ccffd0c7c99806e714d0f14f40faf8
+
+message Item
+{
+	uint64 id = 1;
+	uint64 count = 2;
+}
