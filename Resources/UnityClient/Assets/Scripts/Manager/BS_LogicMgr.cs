@@ -8,6 +8,7 @@ public class BS_LogicMgr : Singleton<BS_LogicMgr>
 	{
 		BS_SystemMgr.Instance.OnInit();
         BS_ManagerMgr.Instance.OnInit();
+        BS_ControllerMgr.Instance.OnInit();
     }
     public void OnBeforeLogin() { BS_SystemMgr.Instance.OnBeforeLogin(); }
     public void OnLogin() { BS_SystemMgr.Instance.OnLogin(); }
@@ -16,6 +17,7 @@ public class BS_LogicMgr : Singleton<BS_LogicMgr>
 	{
 		BS_SystemMgr.Instance.OnUpdate();
         BS_ManagerMgr.Instance.OnUpdate();
+        BS_ControllerMgr.Instance.OnUpdate();
     }
     public void OnFixedUpdate(float fixedDeltaTime)
     {
@@ -25,5 +27,6 @@ public class BS_LogicMgr : Singleton<BS_LogicMgr>
     {
         BS_SystemMgr.Instance.OnExit();
         BS_ManagerMgr.Instance.OnExit();
+        BS_ControllerMgr.Instance.OnExit();
     }
 }
