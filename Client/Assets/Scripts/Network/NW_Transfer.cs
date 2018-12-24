@@ -152,15 +152,18 @@ public class NW_Transfer
     {
         if (IsConnected)
         {
-            NW_Package package = new NW_Package(protoType, bytes);
-            byte[] packageBytes = package.Encode();
-            try
+            if (bytes.Length <= NW_Def.PACKAGE_BODY_MAX_SIZE)
             {
-                socket.BeginSend(packageBytes, 0, packageBytes.Length, SocketFlags.None, new AsyncCallback(OnSend), null);
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError("Send Failed : " + e.ToString());
+                NW_Package package = new NW_Package(protoType, bytes);
+                byte[] packageBytes = package.Encode();
+                try
+                {
+                    socket.BeginSend(packageBytes, 0, packageBytes.Length, SocketFlags.None, new AsyncCallback(OnSend), null);
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError("Send Failed : " + e.ToString());
+                }
             }
         }
     }
