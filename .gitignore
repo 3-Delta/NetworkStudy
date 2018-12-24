@@ -41,3 +41,8 @@
 /Resources/GM/GM/obj
 /Resources/GM/GM/bin
 /Resources/GM/GM/GM.csproj
+/Server/Server/Server.sln
+/Server/Server/.vs
+/Server/Server/bin
+/Server/Server/obj
+/Server/Server/Server.csproj

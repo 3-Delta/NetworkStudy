@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using UnityEngine;
 
 // 单个transfer, 将来可能多个transfer协作
 public class NW_Transfer
@@ -39,7 +38,7 @@ public class NW_Transfer
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.Log("Connect Failed : " + e.Message);
+                Console.WriteLine("Connect Failed : " + e.Message);
             }
         }
     }
@@ -59,7 +58,7 @@ public class NW_Transfer
         }
         catch (Exception e)
         {
-            UnityEngine.Debug.Log("Connect Failed : " + e.Message);
+            Console.WriteLine("Connect Failed : " + e.Message);
         }
 
         connectedCallback?.Invoke();
@@ -75,7 +74,7 @@ public class NW_Transfer
             if (read < 1)
             {
                 BS_EventManager<EEventType>.Trigger(EEventType.OnConnectLost);
-                Debug.LogError("Connect Lost : " + errCode.ToString());
+                Console.WriteLine("Connect Lost : " + errCode.ToString());
                 return;
             }
 
@@ -97,7 +96,7 @@ public class NW_Transfer
         }
         catch (System.Exception e)
         {
-            Debug.LogError("OnReceive Failed : " + e.ToString());
+            Console.WriteLine("OnReceive Failed : " + e.ToString());
         }
     }
 
@@ -112,7 +111,7 @@ public class NW_Transfer
             if (read < 1)
             {
                 BS_EventManager<EEventType>.Trigger(EEventType.OnConnectLost);
-                Debug.LogError("Connect Lost : " + errCode.ToString());
+                Console.WriteLine("Connect Lost : " + errCode.ToString());
                 return;
             }
 
@@ -134,7 +133,7 @@ public class NW_Transfer
         }
         catch (System.Exception e)
         {
-            Debug.LogError("OnReceive Failed : " + e.ToString());
+            Console.WriteLine("OnReceive Failed : " + e.ToString());
         }
     }
     #endregion
@@ -162,7 +161,7 @@ public class NW_Transfer
                 }
                 catch (System.Exception e)
                 {
-                    Debug.LogError("Send Failed : " + e.ToString());
+                    Console.WriteLine("Send Failed : " + e.ToString());
                 }
             }
         }
@@ -172,7 +171,7 @@ public class NW_Transfer
         try { socket.EndSend(ar); }
         catch (System.Exception e)
         {
-            Debug.LogError("EndSend Failed : " + e.ToString());
+            Console.WriteLine("EndSend Failed : " + e.ToString());
         }
     }
     public void Update()
