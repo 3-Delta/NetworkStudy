@@ -8,9 +8,12 @@ using System.Net.Sockets;
 public class NW_Transfer
 {
     private Socket socket;
-    private System.Action connectedCallback;
+    private System.Action listenedCallback;
     private NW_Buffer buffer = new NW_Buffer();
+
+    // 各个客户端连接的数据包都在该队列中
     public NW_Queue queue { get; private set; } = new NW_Queue();
+    public int listenCount { get; set; } = 100;
 
     public bool IsConnected
     {
@@ -19,49 +22,49 @@ public class NW_Transfer
 
     public NW_Transfer()
     {
-        connectedCallback = null;
+        listenedCallback = null;
+        socket = null;
     }
 
-    #region // Connect
-    public void Connect(string ip, int port, System.Action callback) { Connect(IPAddress.Parse(ip), port, callback); }
-    public void Connect(IPAddress ip, int port, System.Action callback) { Connect(new IPEndPoint(ip, port), callback); }
-    public void Connect(IPEndPoint ipe, System.Action callback)
+    #region // Listen
+    public void Listen(string ip, int port, int listenCount, System.Action callback) { Listen(IPAddress.Parse(ip), port, listenCount, callback); }
+    public void Listen(IPAddress ip, int port, int listenCount, System.Action callback) { Listen(new IPEndPoint(ip, port), listenCount, callback); }
+    public void Listen(IPEndPoint ipe, int listenCount, System.Action callback)
     {
-        // IPv4, 将来如何处理IPv4和IPv6同时的情况???
         socket = socket ?? T_Network.BuildSocket4TCP(ipe.AddressFamily);
-        if (!IsConnected)
+        listenedCallback = callback;
+        try
         {
-            connectedCallback = callback;
-            try
-            {
-                socket.BeginConnect(ipe, new AsyncCallback(OnConnected), null);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Connect Failed : " + e.Message);
-            }
+            socket.Bind(ipe);
+            socket.Listen(listenCount);
+            socket.BeginAccept(new System.AsyncCallback(OnListen), null);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Listen Failed : " + e.Message);
         }
     }
     #endregion
 
     #region // OnTransfer
-    private void OnConnected(IAsyncResult ar)
+    private void OnListen(IAsyncResult ar)
     {
         try
         {
-            // 建立连接
-            socket.EndConnect(ar);
-            // 收发数据
-            buffer.Clear();
+            Socket client = socket.EndAccept(ar);
             NW_Package package = new NW_Package();
-            socket.BeginReceive(buffer.buffer, 0, NW_Def.PACKAGE_HEAD_SIZE, SocketFlags.None, new AsyncCallback(OnReceiveHead), package);
+            // 终于理解为什么服务器的数据包中需要一个socket引用了。
+            package.socket = client;
+            client.BeginReceive(buffer.buffer, 0, NW_Def.PACKAGE_HEAD_SIZE, SocketFlags.None, new AsyncCallback(OnReceiveHead), package);
         }
         catch (Exception e)
         {
             Console.WriteLine("Connect Failed : " + e.Message);
         }
 
-        connectedCallback?.Invoke();
+        // 继续监听其他客户端socket
+        socket.BeginAccept(new System.AsyncCallback(OnListen), null);
+        listenedCallback?.Invoke();
     }
     private void OnReceiveHead(IAsyncResult ar)
     {
@@ -69,12 +72,12 @@ public class NW_Transfer
         try
         {
             SocketError errCode = SocketError.Success;
-            int read = socket.EndReceive(ar, out errCode);
+            int read = package.socket.EndReceive(ar, out errCode);
             // 丢失连接
             if (read < 1)
             {
                 BS_EventManager<EEventType>.Trigger(EEventType.OnConnectLost);
-                Console.WriteLine("Connect Lost : " + errCode.ToString());
+                Debug.LogError("Connect Lost : " + errCode.ToString());
                 return;
             }
 
@@ -83,7 +86,7 @@ public class NW_Transfer
             // 包头必须读满
             if (buffer.length < NW_Def.PACKAGE_HEAD_SIZE)
             {
-                socket.BeginReceive(buffer.buffer, buffer.length, NW_Def.PACKAGE_HEAD_SIZE - buffer.length, SocketFlags.None, new AsyncCallback(OnReceiveHead), package);
+                package.socket.BeginReceive(buffer.buffer, buffer.length, NW_Def.PACKAGE_HEAD_SIZE - buffer.length, SocketFlags.None, new AsyncCallback(OnReceiveHead), package);
             }
             else
             {
@@ -91,12 +94,12 @@ public class NW_Transfer
                 package.head.Decode(buffer.buffer);
                 // 清0开始接收body
                 buffer.Clear();
-                socket.BeginReceive(buffer.buffer, 0, NW_Def.PACKAGE_BODY_MAX_SIZE, SocketFlags.None, new AsyncCallback(OnReceiveBody), package);
+                package.socket.BeginReceive(buffer.buffer, 0, NW_Def.PACKAGE_BODY_MAX_SIZE, SocketFlags.None, new AsyncCallback(OnReceiveBody), package);
             }
         }
         catch (System.Exception e)
         {
-            Console.WriteLine("OnReceive Failed : " + e.ToString());
+            Debug.LogError("OnReceive Failed : " + e.ToString());
         }
     }
 
@@ -106,12 +109,12 @@ public class NW_Transfer
         try
         {
             SocketError errCode = SocketError.Success;
-            int read = socket.EndReceive(ar, out errCode);
+            int read = package.socket.EndReceive(ar, out errCode);
             // 断开连接
             if (read < 1)
             {
                 BS_EventManager<EEventType>.Trigger(EEventType.OnConnectLost);
-                Console.WriteLine("Connect Lost : " + errCode.ToString());
+                Debug.LogError("Connect Lost : " + errCode.ToString());
                 return;
             }
 
@@ -119,7 +122,7 @@ public class NW_Transfer
             // 消息体满足长度
             if (buffer.length < package.head.size)
             {
-                socket.BeginReceive(buffer.buffer, buffer.length, package.head.size - buffer.length, SocketFlags.None, new AsyncCallback(OnReceiveBody), package);
+                package.socket.BeginReceive(buffer.buffer, buffer.length, package.head.size - buffer.length, SocketFlags.None, new AsyncCallback(OnReceiveBody), package);
             }
             else
             {
@@ -128,21 +131,13 @@ public class NW_Transfer
                 queue.Enqueue(package);
 
                 buffer.Clear();
-                socket.BeginReceive(package.body.bodyBytes, 0, NW_Def.PACKAGE_HEAD_SIZE, SocketFlags.None, new AsyncCallback(OnReceiveHead), package);
+                package.socket.BeginReceive(package.body.bodyBytes, 0, NW_Def.PACKAGE_HEAD_SIZE, SocketFlags.None, new AsyncCallback(OnReceiveHead), package);
             }
         }
         catch (System.Exception e)
         {
-            Console.WriteLine("OnReceive Failed : " + e.ToString());
+            Debug.LogError("OnReceive Failed : " + e.ToString());
         }
-    }
-    #endregion
-
-    #region // DisConnect
-    public void DicConnect()
-    {
-        socket?.Close();
-        connectedCallback = null;
     }
     #endregion
 

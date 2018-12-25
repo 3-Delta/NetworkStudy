@@ -62,10 +62,11 @@ public struct NW_PackageBody
     }
 }
 
-public struct NW_Package
+public class NW_Package
 {
     public NW_PackageHead head { get; private set; }
     public NW_PackageBody body { get; private set; }
+    public Socket socket { get; set; }
 
     public NW_Package(ushort protoType, byte[] bytes)
     {
