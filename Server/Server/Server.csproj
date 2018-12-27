@@ -52,7 +52,7 @@
     <Compile Include="Scripts\Define\BS_Def.cs" />
     <Compile Include="Scripts\Define\BS_Enum.cs" />
     <Compile Include="Scripts\Define\BS_EProtoType.cs" />
-    <Compile Include="Scripts\Define\BS_EventType.cs" />
+    <Compile Include="Scripts\Define\BS_EEventType.cs" />
     <Compile Include="Scripts\Define\BS_LogicMgr.cs" />
     <Compile Include="Scripts\Define\BS_ManagerBase.cs" />
     <Compile Include="Scripts\Define\BS_ManagerList.cs" />
@@ -64,8 +64,8 @@
     <Compile Include="Scripts\Define\Event\BS_EventManager.cs" />
     <Compile Include="Scripts\Logic\Define\LC_Const.cs" />
     <Compile Include="Scripts\Logic\Define\LC_Enum.cs" />
-    <Compile Include="Scripts\Logic\Define\LC_EventType.cs" />
-    <Compile Include="Scripts\Logic\Define\LC_ProtoType.cs" />
+    <Compile Include="Scripts\Logic\Define\LC_EEventType.cs" />
+    <Compile Include="Scripts\Logic\Define\LC_EProtoType.cs" />
     <Compile Include="Scripts\Logic\Main\App.cs" />
     <Compile Include="Scripts\Logic\Main\Main.cs" />
     <Compile Include="Scripts\Logic\System\Sys_Mail.cs" />
