@@ -68,6 +68,7 @@ public class NW_Package
     public NW_PackageBody body { get; private set; }
     public Socket socket { get; set; }
 
+    public NW_Package() { }
     public NW_Package(ushort protoType, byte[] bytes)
     {
         head = new NW_PackageHead(protoType, (ushort)bytes.Length);

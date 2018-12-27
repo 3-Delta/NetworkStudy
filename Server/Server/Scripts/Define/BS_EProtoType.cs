@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-class Program
+public enum BS_EProtoType
 {
-    static void Main(string[] args)
-    {
-        App.Init();
-        App.Update();
-    }
+    OnAccepted,
+    OnConnected,
+    OnDisConnected,
+    OnLost,
 }

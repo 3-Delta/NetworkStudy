@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 
 // 将来客户端和服务器公用
-public enum EProtoType : ushort
+public enum LC_EProtoType : ushort
 {
     csReadMail,
     scReadMail,

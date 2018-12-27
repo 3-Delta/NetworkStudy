@@ -8,7 +8,7 @@ public class BS_LogicMgr : Singleton<BS_LogicMgr>
 		BS_SystemMgr.Instance.OnInit();
         BS_ManagerMgr.Instance.OnInit();
     }
-    public void OnBeforeLogin() { BS_SystemMgr.Instance.OnBeforeLogin(); }
+    public void OnReload() { BS_SystemMgr.Instance.OnReload(); }
     public void OnLogin() { BS_SystemMgr.Instance.OnLogin(); }
     public void OnLogout() { BS_SystemMgr.Instance.OnLogout(); }
     public void OnUpdate()

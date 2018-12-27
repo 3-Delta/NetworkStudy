@@ -10,6 +10,7 @@ public class NW_Transfer
     private Socket socket;
     private System.Action listenedCallback;
     private NW_Buffer buffer = new NW_Buffer();
+    private List<Socket> clientSockets = new List<Socket>();
 
     // 各个客户端连接的数据包都在该队列中
     public NW_Queue queue { get; private set; } = new NW_Queue();
@@ -23,6 +24,7 @@ public class NW_Transfer
     public NW_Transfer()
     {
         listenedCallback = null;
+        clientSockets.Clear();
         socket = null;
     }
 
@@ -52,6 +54,7 @@ public class NW_Transfer
         try
         {
             Socket client = socket.EndAccept(ar);
+            clientSockets.Add(client);
             NW_Package package = new NW_Package();
             // 终于理解为什么服务器的数据包中需要一个socket引用了。
             package.socket = client;
@@ -76,8 +79,8 @@ public class NW_Transfer
             // 丢失连接
             if (read < 1)
             {
-                BS_EventManager<EEventType>.Trigger(EEventType.OnConnectLost);
-                Debug.LogError("Connect Lost : " + errCode.ToString());
+                BS_EventManager<LC_EEventType>.Trigger(LC_EEventType.OnConnectLost);
+                Console.WriteLine("Connect Lost : " + errCode.ToString());
                 return;
             }
 
@@ -99,7 +102,7 @@ public class NW_Transfer
         }
         catch (System.Exception e)
         {
-            Debug.LogError("OnReceive Failed : " + e.ToString());
+            Console.WriteLine("OnReceive Failed : " + e.ToString());
         }
     }
 
@@ -113,8 +116,8 @@ public class NW_Transfer
             // 断开连接
             if (read < 1)
             {
-                BS_EventManager<EEventType>.Trigger(EEventType.OnConnectLost);
-                Debug.LogError("Connect Lost : " + errCode.ToString());
+                BS_EventManager<LC_EEventType>.Trigger(LC_EEventType.OnConnectLost);
+                Console.WriteLine("Connect Lost : " + errCode.ToString());
                 return;
             }
 
@@ -136,7 +139,7 @@ public class NW_Transfer
         }
         catch (System.Exception e)
         {
-            Debug.LogError("OnReceive Failed : " + e.ToString());
+            Console.WriteLine("OnReceive Failed : " + e.ToString());
         }
     }
     #endregion

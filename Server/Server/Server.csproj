@@ -51,6 +51,7 @@
     <Compile Include="Scripts\Define\BS_Const.cs" />
     <Compile Include="Scripts\Define\BS_Def.cs" />
     <Compile Include="Scripts\Define\BS_Enum.cs" />
+    <Compile Include="Scripts\Define\BS_EProtoType.cs" />
     <Compile Include="Scripts\Define\BS_EventType.cs" />
     <Compile Include="Scripts\Define\BS_LogicMgr.cs" />
     <Compile Include="Scripts\Define\BS_ManagerBase.cs" />
@@ -84,6 +85,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="LogicData\CSVItem.txt" />
     <Content Include="Scripts\Logic\Deps\Protobuf\Google.Protobuf.dll" />
     <Content Include="Scripts\Logic\Manager\readMe.txt" />
     <Content Include="Scripts\Logic\Tools\readMe.txt" />

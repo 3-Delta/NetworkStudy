@@ -8,9 +8,9 @@ public class BS_SystemMgr : BS_SystemBase<BS_SystemMgr>
 	{
         BS_SystemList.list.ForEach(system => { system.OnInit(); });
 	}
-    public override void OnBeforeLogin()
+    public override void OnReload()
     {
-        BS_SystemList.list.ForEach(system => { system.OnBeforeLogin(); });
+        BS_SystemList.list.ForEach(system => { system.OnReload(); });
     }
     public override void OnLogin() 
 	{

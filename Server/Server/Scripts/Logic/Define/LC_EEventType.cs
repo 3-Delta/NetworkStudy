@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-public enum BS_EEventType : ushort
+public enum LC_EEventType : ushort
 {
     OnConnectFailed = 0,
     OnConnectSuccess = 1,
