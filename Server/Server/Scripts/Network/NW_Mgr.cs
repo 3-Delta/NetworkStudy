@@ -86,6 +86,7 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
             Socket client = socket.EndAccept(ar);
             NW_Buffer buffer = new NW_Buffer(client);
             client.BeginReceive(buffer.buffer, 0, NW_Def.PACKAGE_HEAD_SIZE, SocketFlags.None, new AsyncCallback(OnReceivedPackage), buffer);
+            client.BeginSend
         }
         catch (Exception e)
         {
