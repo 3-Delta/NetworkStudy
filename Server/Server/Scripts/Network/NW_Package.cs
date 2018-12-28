@@ -14,31 +14,40 @@ public struct NW_PackageHead
     // 2字节,控制单个包体大小[不包括包头]
     public ushort size { get; private set; }
     public ushort protoType { get; private set; }
+    public ushort playerID { get; private set; } // serverID * 10000 + playerID
 
-    public NW_PackageHead(ushort protoType, ushort size)
+    public NW_PackageHead(ushort protoType, ushort size, ushort playerID)
     {
         this.protoType = protoType;
         this.size = size;
+        this.playerID = playerID;
     }
     public byte[] Encode()
     {
         // 针对大小端设备统一进行字节顺序转换
         byte[] sizeBytes = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(size));
         byte[] typeBytes = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(protoType));
+        byte[] playerBytes = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(playerID));
+
         int byteCount = NW_Def.PACKAGE_HEAD_SIZE;
         byte[] headBytes = new byte[byteCount];
+
         Buffer.BlockCopy(sizeBytes, 0, headBytes, 0, sizeBytes.Length);
         Buffer.BlockCopy(typeBytes, 0, headBytes, sizeof(ushort), typeBytes.Length);
+        Buffer.BlockCopy(playerBytes, 0, headBytes, sizeof(ushort) + sizeof(ushort), playerBytes.Length);
+
         return headBytes;
     }
     public void Decode(byte[] bytes, int startIndex = 0)
     {
-        if (bytes != null)
+        if (bytes != null && bytes.Length > startIndex && bytes.Length - startIndex >= NW_Def.PACKAGE_HEAD_SIZE)
         {
             size = BitConverter.ToUInt16(bytes, startIndex);
             size = (ushort)IPAddress.NetworkToHostOrder(size);
             protoType = BitConverter.ToUInt16(bytes, startIndex + sizeof(ushort));
             protoType = (ushort)IPAddress.NetworkToHostOrder(protoType);
+            playerID = BitConverter.ToUInt16(bytes, startIndex + sizeof(ushort) + sizeof(ushort));
+            playerID = (ushort)IPAddress.NetworkToHostOrder(playerID);
         }
     }
 }
@@ -49,7 +58,6 @@ public struct NW_PackageBody
     public byte[] bodyBytes { get; private set; }
 
     // public NW_PackageBody(byte[] bytes) { Decode(bytes, 0); }
-    public void Clear() { }
     public byte[] Encode() { return bodyBytes; }
     public void Decode(byte[] bytes, int startIndex = 0)
     {
@@ -62,16 +70,14 @@ public struct NW_PackageBody
     }
 }
 
-public class NW_Package
+public struct NW_Package
 {
     public NW_PackageHead head { get; private set; }
     public NW_PackageBody body { get; private set; }
-    public Socket socket { get; set; }
 
-    public NW_Package() { }
     public NW_Package(ushort protoType, byte[] bytes)
     {
-        head = new NW_PackageHead(protoType, (ushort)bytes.Length);
+        head = new NW_PackageHead(protoType, (ushort)bytes.Length, 1);
         body = new NW_PackageBody();
         body.Decode(bytes, 0);
     }

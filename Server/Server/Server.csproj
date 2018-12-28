@@ -63,6 +63,7 @@
     <Compile Include="Scripts\Define\BS_SystemMgr.cs" />
     <Compile Include="Scripts\Define\Event\BS_EventManager.cs" />
     <Compile Include="Scripts\Logic\Define\LC_Const.cs" />
+    <Compile Include="Scripts\Logic\Define\LC_Def.cs" />
     <Compile Include="Scripts\Logic\Define\LC_Enum.cs" />
     <Compile Include="Scripts\Logic\Define\LC_EEventType.cs" />
     <Compile Include="Scripts\Logic\Define\LC_EProtoType.cs" />
