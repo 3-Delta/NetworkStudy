@@ -10,7 +10,6 @@ using Google.Protobuf;
 public class NW_Mgr : BS_ManagerBase<NW_Mgr>
 {
     private Socket socket;
-    public int listenCount { get; set; } = 100;
 
     public override void OnInit()
     {
@@ -19,7 +18,7 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
         BS_EventManager<BS_EProtoType>.Add(BS_EProtoType.OnDisConnected, OnDisConnected);
         BS_EventManager<BS_EProtoType>.Add(BS_EProtoType.OnLost, OnLost);
 
-        Listen(NW_Def.IPv4, NW_Def.PORT, listenCount);
+        Listen(NW_Def.IPv4, NW_Def.PORT, NW_Def.ListenMax);
     }
 
     #region // 连接
@@ -32,7 +31,7 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
         {
             socket.Bind(ipe);
             socket.Listen(listenCount);
-            socket.BeginAccept(new System.AsyncCallback(OnAccepted), socket);
+            socket.BeginAccept(new System.AsyncCallback(OnAccepted), null);
         }
         catch (Exception e)
         {
@@ -42,7 +41,22 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
     #endregion
 
     #region // 回调
-    private void OnAccepted(IAsyncResult ar) { }
+    private void OnAccepted(IAsyncResult ar)
+    {
+        try
+        {
+            Socket client = socket.EndAccept(ar);
+            NW_Transfer transfer = new NW_Transfer(client);
+            transfer.BeginReceive();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Connect Failed : " + e.Message);
+        }
+
+        // 继续监听其他客户端socket
+        socket.BeginAccept(new System.AsyncCallback(OnAccepted), null);
+    }
     private void OnAccepted() { }
     private void OnConnected() { }
     private void OnDisConnected() { }

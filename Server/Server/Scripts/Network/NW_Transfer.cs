@@ -42,15 +42,29 @@ public class NW_Transfer
             }
         }
     }
-
     public NW_Transfer(Socket socket)
     {
         this.socket = socket;
-
         receivedThread = new System.Threading.Thread(new System.Threading.ThreadStart(ReceivedThreadUpdate));
         receivedThread.Start();
         sendThread = new System.Threading.Thread(new System.Threading.ThreadStart(SendThreadUpdate));
         sendThread.Start();
+    }
+    public void BeginReceive()
+    {
+        socket.BeginReceive(buffer.buffer, 0, NW_Def.PACKAGE_HEAD_SIZE, SocketFlags.None, new AsyncCallback(OnReceivedPackage), null);
+    }
+    private void OnReceivedPackage(IAsyncResult ar)
+    {
+        try
+        {
+            // 继续receive
+            socket.BeginReceive(buffer.buffer, 0, NW_Def.PACKAGE_HEAD_SIZE, SocketFlags.None, new AsyncCallback(OnReceivedPackage), null);
+        }
+        catch (System.Exception e)
+        {
+            Console.WriteLine("OnReceivedPackage Failed : " + e.ToString());
+        }
     }
 
     #region // 收发数据
