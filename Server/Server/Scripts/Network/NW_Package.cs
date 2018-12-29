@@ -57,7 +57,6 @@ public struct NW_PackageBody
     // bodyBytes的长度不定，但是存在一个上限值，如果超过上限值，如何处理？
     public byte[] bodyBytes { get; private set; }
 
-    // public NW_PackageBody(byte[] bytes) { Decode(bytes, 0); }
     public byte[] Encode() { return bodyBytes; }
     public void Decode(byte[] bytes, int startIndex = 0)
     {

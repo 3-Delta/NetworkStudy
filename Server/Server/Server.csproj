@@ -70,6 +70,7 @@
     <Compile Include="Scripts\Logic\Main\App.cs" />
     <Compile Include="Scripts\Logic\Main\Main.cs" />
     <Compile Include="Scripts\Logic\System\Sys_Mail.cs" />
+    <Compile Include="Scripts\Logic\System\Sys_Player.cs" />
     <Compile Include="Scripts\Network\NW_Buffer.cs" />
     <Compile Include="Scripts\Network\NW_Def.cs" />
     <Compile Include="Scripts\Network\NW_Mgr.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Scripts\Network\NW_Queue.cs" />
     <Compile Include="Scripts\Network\NW_Transfer.cs" />
     <Compile Include="Scripts\Network\Protos\Common.cs" />
+    <Compile Include="Scripts\Network\Protos\Login.cs" />
     <Compile Include="Scripts\Network\Protos\Mail.cs" />
     <Compile Include="Scripts\Tools\T_Network.cs" />
     <Compile Include="Scripts\Tools\T_Object.cs" />

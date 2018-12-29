@@ -5,6 +5,9 @@ using System;
 // 将来客户端和服务器公用
 public enum LC_EProtoType : ushort
 {
+    csLogin,
+    scLogin,
+
     csReadMail,
     scReadMail,
 }

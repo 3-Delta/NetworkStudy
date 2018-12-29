@@ -13,6 +13,7 @@ echo destPath = %destPath%
 
 google\bin\protoc.exe -I=%sourcePath% --csharp_out=%destPath% Common.proto
 google\bin\protoc.exe -I=%sourcePath% --csharp_out=%destPath% Mail.proto
+google\bin\protoc.exe -I=%sourcePath% --csharp_out=%destPath% Login.proto
 
 pause
 echo "Press any key to exit!"

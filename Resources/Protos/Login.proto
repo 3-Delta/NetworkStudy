@@ -1,0 +1,14 @@
+syntax = "proto3";
+package Protobuf_Net;
+
+import "Common.proto";
+
+message CSLogin
+{
+	uint32 playerID = 1;
+}
+
+message SCLogin
+{
+	uint32 playerID = 1;
+}
