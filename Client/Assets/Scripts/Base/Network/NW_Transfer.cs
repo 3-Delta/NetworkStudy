@@ -59,7 +59,7 @@ public class NW_Transfer
         }
         catch (Exception e)
         {
-            UnityEngine.Debug.Log("Connect Failed : " + e.Message);
+            UnityEngine.Debug.Log("OnConnected Failed : " + e.Message);
         }
 
         connectedCallback?.Invoke();
@@ -74,8 +74,8 @@ public class NW_Transfer
             // 丢失连接
             if (read < 1)
             {
-                BS_EventManager<EEventType>.Trigger(EEventType.OnConnectLost);
-                Debug.LogError("Connect Lost : " + errCode.ToString());
+                BS_EventManager<BS_EventType>.Trigger(BS_EventType.OnConnectLost);
+                Debug.LogError("OnReceiveHead Lost : " + errCode.ToString());
                 return;
             }
 
@@ -97,7 +97,7 @@ public class NW_Transfer
         }
         catch (System.Exception e)
         {
-            Debug.LogError("OnReceive Failed : " + e.ToString());
+            Debug.LogError("OnReceiveHead Failed : " + e.ToString());
         }
     }
 
@@ -111,8 +111,8 @@ public class NW_Transfer
             // 断开连接
             if (read < 1)
             {
-                BS_EventManager<EEventType>.Trigger(EEventType.OnConnectLost);
-                Debug.LogError("Connect Lost : " + errCode.ToString());
+                BS_EventManager<BS_EventType>.Trigger(BS_EventType.OnConnectLost);
+                Debug.LogError("OnReceiveBody Lost : " + errCode.ToString());
                 return;
             }
 
@@ -134,7 +134,7 @@ public class NW_Transfer
         }
         catch (System.Exception e)
         {
-            Debug.LogError("OnReceive Failed : " + e.ToString());
+            Debug.LogError("OnReceiveBody Failed : " + e.ToString());
         }
     }
     #endregion
@@ -182,7 +182,7 @@ public class NW_Transfer
             NW_Package package = new NW_Package();
             if (queue.Dequeue(ref package))
             {
-                BS_EventManager<EProtoType>.Trigger<NW_PackageBody>((EProtoType)package.head.protoType, package.body);
+                BS_EventManager<LC_ProtoType>.Trigger<NW_PackageBody>((LC_ProtoType)package.head.protoType, package.body);
             }
         }
     }

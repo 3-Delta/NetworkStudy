@@ -20,7 +20,7 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
     {
         // 判断内外网
     }
-    public static void Send(EProtoType protoType, IMessage message)
+    public static void Send(LC_ProtoType protoType, IMessage message)
     {
         using (System.IO.MemoryStream strenm = new System.IO.MemoryStream())
         {
@@ -28,6 +28,6 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
             Send(protoType, strenm.ToArray());
         }
     }
-    public static void Send(EProtoType protoType, byte[] bytes) { Send((ushort)protoType, bytes); }
+    public static void Send(LC_ProtoType protoType, byte[] bytes) { Send((ushort)protoType, bytes); }
     public static void Send(ushort protoType, byte[] bytes) { transfer?.Send(protoType, bytes); }
 }
