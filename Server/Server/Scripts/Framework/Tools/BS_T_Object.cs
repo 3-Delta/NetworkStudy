@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Formatters.Binary;
 
-public static class T_Object
+public static class BS_T_Object
 {
     public static byte[] Serialize<T>(T t)
     {

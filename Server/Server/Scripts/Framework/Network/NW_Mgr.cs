@@ -26,7 +26,7 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
     public void Listen(IPAddress ip, int port, int listenCount) { Listen(new IPEndPoint(ip, port), listenCount); }
     public void Listen(IPEndPoint ipe, int listenCount)
     {
-        socket = T_Network.BuildSocket4TCP(ipe.AddressFamily);
+        socket = BS_T_Network.BuildSocket4TCP(ipe.AddressFamily);
         try
         {
             socket.Bind(ipe);

@@ -25,7 +25,7 @@ public class Map<Key, Value>
     public void Clear() { dict.Clear(); }
 }
 
-public static class T_Map
+public static class BS_T_Map
 {
 
 }

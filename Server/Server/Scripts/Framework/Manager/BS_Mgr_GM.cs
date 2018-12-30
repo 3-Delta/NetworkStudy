@@ -4,6 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class Mgr_DB : BS_ManagerBase<Mgr_DB>
+public class BS_Mgr_GM : BS_ManagerBase<BS_Mgr_GM>
 {
 }
