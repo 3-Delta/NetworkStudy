@@ -5,18 +5,18 @@ using System.Threading;
 
 public static class App
 {
-    public enum TState
+    public enum EAppState
     {
-        Normal,
-        Reload,
+        Running,
+        Reload, // 热更新表格
         Exit,
     }
 
-    public static TState currentState = TState.Normal;
+    public static EAppState currentState = EAppState.Running;
 
     public static void Init()
     {
-        currentState = TState.Normal;
+        currentState = EAppState.Running;
         BS_LogicMgr.Instance.OnInit();
 
         BS_EventManager<BS_EEventType>.Handle(BS_EEventType.OnReload, () =>
@@ -27,7 +27,7 @@ public static class App
 
     public static void Update()
     {
-        while (currentState != TState.Exit)
+        while (currentState != EAppState.Exit)
         {
             BS_LogicMgr.Instance.OnUpdate();
             Thread.Sleep(25);

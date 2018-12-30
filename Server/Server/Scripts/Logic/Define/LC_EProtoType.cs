@@ -7,6 +7,10 @@ public enum LC_EProtoType : ushort
 {
     csLogin,
     scLogin,
+    csLogout,
+    scLogout,
+
+    scKickOff,
 
     csReadMail,
     scReadMail,

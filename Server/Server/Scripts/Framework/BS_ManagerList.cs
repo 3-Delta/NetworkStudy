@@ -15,5 +15,8 @@ public static class BS_ManagerList
     public readonly static List<BS_ManagerBaseCallback> list = new List<BS_ManagerBaseCallback>()
     {
         NW_Mgr.Instance,
+        Mgr_DB.Instance,
+        Mgr_GM.Instance,
+        Mgr_Redis.Instance,
     };
 }
