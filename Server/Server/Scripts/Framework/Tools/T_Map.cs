@@ -24,3 +24,8 @@ public class Map<Key, Value>
     public void Remove(Key key) { if (Has(key)) { dict.Remove(key); } }
     public void Clear() { dict.Clear(); }
 }
+
+public static class T_Map
+{
+
+}
