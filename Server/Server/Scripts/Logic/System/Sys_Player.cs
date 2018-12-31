@@ -3,27 +3,28 @@ using System.Collections.Generic;
 using System;
 using ProtobufNet;
 
-public class Sys_PlayerCollection : BS_SystemBase<Sys_PlayerCollection>
+public class Sys_Player : BS_SystemBase<Sys_Player>
 {
     private Map<ushort, Player> players = new Map<ushort, Player>();
 
     public override void OnInit()
     {
-        BS_EventManager<LC_EProtoType>.Handle<NW_Package>(LC_EProtoType.scLogin, RespLogin);
-        BS_EventManager<LC_EProtoType>.Handle<NW_Package>(LC_EProtoType.scLogout, RespLogout);
-        BS_EventManager<LC_EProtoType>.Handle<NW_Package>(LC_EProtoType.scKickOff, RespKickOff);
+        BS_EventManager<LC_EProtoType>.Handle<NW_Package>(LC_EProtoType.csLogin, OnReqLogin);
+        BS_EventManager<LC_EProtoType>.Handle<NW_Package>(LC_EProtoType.csLogout, OnReqLogout);
+        BS_EventManager<LC_EProtoType>.Handle<NW_Package>(LC_EProtoType.scKickOff, OnRespKickOff);
     }
 
-    private void RespLogin(NW_Package package)
+    private void OnReqLogin(NW_Package package)
     {
-        SCLogin sc = T_Protobuf.DeSerialize<SCLogin>(SCLogin.Parser, package.body);
+        CSLogin sc = BS_T_Protobuf.DeSerialize<CSLogin>(CSLogin.Parser, package.body.bodyBytes);
+        Console.WriteLine("OnReqLogin : " + sc.PlayerID);
     }
-    private void RespLogout(NW_Package package)
+    private void OnReqLogout(NW_Package package)
     {
-        SCLogout sc = T_Protobuf.DeSerialize<SCLogout>(SCLogout.Parser, package.body);
+        CSLogout sc = BS_T_Protobuf.DeSerialize<CSLogout>(CSLogout.Parser, package.body.bodyBytes);
     }
-    private void RespKickOff(NW_Package package)
+    private void OnRespKickOff(NW_Package package)
     {
-        SCKickOff sc = T_Protobuf.DeSerialize<SCKickOff>(SCKickOff.Parser, package.body);
+        SCKickOff sc = BS_T_Protobuf.DeSerialize<SCKickOff>(SCKickOff.Parser, package.body.bodyBytes);
     }
 }

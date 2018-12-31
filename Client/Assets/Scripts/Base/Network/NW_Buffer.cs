@@ -1,16 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Net.Sockets;
 
 public class NW_Buffer
 {
-    public byte[] buffer;
-    public int length;
+    public NW_Package package;
+    public int realLength;
+    // 缓冲区尽量大，数据接收丢失
+    public byte[] buffer { get; set; } = new byte[NW_Def.PACKAGE_MAX_SIZE * 2];
 
     public NW_Buffer()
     {
-        buffer = new byte[NW_Def.PACKAGE_BODY_MAX_SIZE];
-        Clear();
+        package.Clear();
+        this.Clear();
     }
-    public void Clear() { length = 0; }
+    public void Clear() { realLength = 0; }
 }

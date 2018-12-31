@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Formatters.Binary;
 
-public static class T_Object
+public static class BS_T_Object
 {
     public static byte[] Serialize<T>(T t)
     {
@@ -19,7 +19,7 @@ public static class T_Object
                 stream.Seek(0, SeekOrigin.Begin);
                 return stream.ToArray();
             }
-            catch (Exception e) { return null; }
+            catch (Exception) { return null; }
         }
     }
     public static T DeSerialize<T>(byte[] bytes)
@@ -32,7 +32,7 @@ public static class T_Object
                 BinaryFormatter bf = new BinaryFormatter();
                 return (T)bf.Deserialize(stream);
             }
-            catch (Exception e) { return ret; }
+            catch (Exception) { return ret; }
             
         }
     }

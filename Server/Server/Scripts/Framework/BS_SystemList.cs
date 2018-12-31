@@ -6,5 +6,7 @@ public static class BS_SystemList
 	public readonly static List<BS_SystemBaseCallback> list = new List<BS_SystemBaseCallback>()
 	{
         Sys_Mail.Instance,
-	};
+        Sys_Player.Instance,
+        Sys_Battle.Instance,
+    };
 }

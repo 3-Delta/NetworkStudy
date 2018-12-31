@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public enum BS_EProtoType
+public class BS_Mgr_Log : BS_ManagerBase<BS_Mgr_Log>
 {
-    
 }

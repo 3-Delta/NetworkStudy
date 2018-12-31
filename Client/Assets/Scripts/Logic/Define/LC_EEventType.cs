@@ -2,6 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum LC_EventType
+public enum LC_EEventType
 {
 }

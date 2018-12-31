@@ -93,6 +93,8 @@
     <Compile Include="Scripts\Framework\BS_SystemList.cs" />
     <Compile Include="Scripts\Framework\BS_SystemMgr.cs" />
     <Compile Include="Scripts\Framework\Event\BS_EventManager.cs" />
+    <Compile Include="Scripts\Framework\Manager\BS_Mgr_Log.cs" />
+    <Compile Include="Scripts\Framework\Manager\BS_Mgr_Time.cs" />
     <Compile Include="Scripts\Logic\Define\LC_Const.cs" />
     <Compile Include="Scripts\Logic\Define\LC_Def.cs" />
     <Compile Include="Scripts\Logic\Define\LC_Enum.cs" />
@@ -100,9 +102,9 @@
     <Compile Include="Scripts\Logic\Define\LC_EProtoType.cs" />
     <Compile Include="Scripts\Logic\Main\App.cs" />
     <Compile Include="Scripts\Logic\Main\Main.cs" />
-    <Compile Include="Scripts\Framework\Manager\Mgr_DB.cs" />
-    <Compile Include="Scripts\Framework\Manager\Mgr_GM.cs" />
-    <Compile Include="Scripts\Framework\Manager\Mgr_Redis.cs" />
+    <Compile Include="Scripts\Framework\Manager\BS_Mgr_DB.cs" />
+    <Compile Include="Scripts\Framework\Manager\BS_Mgr_GM.cs" />
+    <Compile Include="Scripts\Framework\Manager\BS_Mgr_Redis.cs" />
     <Compile Include="Scripts\Logic\System\LC_Enemy.cs" />
     <Compile Include="Scripts\Logic\Manager\LC_Mgr_AI.cs" />
     <Compile Include="Scripts\Logic\System\Sys_AI.cs" />
@@ -111,8 +113,8 @@
     <Compile Include="Scripts\Logic\System\Sys_Mail.cs" />
     <Compile Include="Scripts\Logic\System\LC_Player.cs" />
     <Compile Include="Scripts\Logic\System\Sys_Player.cs" />
-    <Compile Include="Scripts\Framework\Tools\T_File.cs" />
-    <Compile Include="Scripts\Framework\Tools\T_Map.cs" />
+    <Compile Include="Scripts\Framework\Tools\BS_T_File.cs" />
+    <Compile Include="Scripts\Framework\Tools\BS_T_Map.cs" />
     <Compile Include="Scripts\Framework\Network\NW_Buffer.cs" />
     <Compile Include="Scripts\Framework\Network\NW_Def.cs" />
     <Compile Include="Scripts\Framework\Network\NW_Mgr.cs" />
@@ -122,10 +124,10 @@
     <Compile Include="Scripts\Framework\Network\Protos\Common.cs" />
     <Compile Include="Scripts\Framework\Network\Protos\Login.cs" />
     <Compile Include="Scripts\Framework\Network\Protos\Mail.cs" />
-    <Compile Include="Scripts\Framework\Tools\T_Network.cs" />
-    <Compile Include="Scripts\Framework\Tools\T_Json.cs" />
-    <Compile Include="Scripts\Framework\Tools\T_Object.cs" />
-    <Compile Include="Scripts\Framework\Tools\T_Protobuf.cs" />
+    <Compile Include="Scripts\Framework\Tools\BS_T_Network.cs" />
+    <Compile Include="Scripts\Framework\Tools\BS_T_Json.cs" />
+    <Compile Include="Scripts\Framework\Tools\BS_T_Object.cs" />
+    <Compile Include="Scripts\Framework\Tools\BS_T_Protobuf.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -9,18 +9,13 @@ using Google.Protobuf;
 // https://www.jianshu.com/p/fa959d16eaed
 public class NW_Mgr : BS_ManagerBase<NW_Mgr>
 {
-    public static NW_Transfer transfer { get; private set; } = new NW_Transfer();
+    private NW_Transfer transfer = new NW_Transfer(null);
 
-    public override void OnInit()
-    {
-
-    }
+    public override void OnInit() { }
     public override void OnUpdate() { transfer?.Update(); }
-    public static void Ping()
-    {
-        // 判断内外网
-    }
-    public static void Send(LC_ProtoType protoType, IMessage message)
+
+    public void Connect(string ip, int port, System.Action callback = null) { transfer?.Connect(ip, port, callback); }
+    public void Send(LC_EProtoType protoType, IMessage message)
     {
         using (System.IO.MemoryStream strenm = new System.IO.MemoryStream())
         {
@@ -28,6 +23,6 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
             Send(protoType, strenm.ToArray());
         }
     }
-    public static void Send(LC_ProtoType protoType, byte[] bytes) { Send((ushort)protoType, bytes); }
-    public static void Send(ushort protoType, byte[] bytes) { transfer?.Send(protoType, bytes); }
+    private void Send(LC_EProtoType protoType, byte[] bytes) { Send((short)protoType, bytes); }
+    private void Send(short protoType, byte[] bytes) { transfer?.Send(protoType, bytes); }
 }

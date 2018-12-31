@@ -8,6 +8,7 @@ public enum BS_EEventType : ushort
     // 连接中断
     OnConnectLost = 2,
     OnSendFailed = 3,
+    OnAccepted,
 
-    OnReload = 4,
+    OnReload,
 }

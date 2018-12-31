@@ -10,6 +10,7 @@ public class NW_Def
     public const int PORT = 20086;
     public static int ListenMax = 1000;
 
-    public const ushort PACKAGE_HEAD_SIZE = sizeof(ushort) + sizeof(ushort) + sizeof(ushort);
+    public const int PACKAGE_HEAD_SIZE = sizeof(short) + sizeof(short) + sizeof(short);
     public const int PACKAGE_BODY_MAX_SIZE = 1024 * 8;
+    public const int PACKAGE_MAX_SIZE = PACKAGE_HEAD_SIZE + PACKAGE_BODY_MAX_SIZE;
 }

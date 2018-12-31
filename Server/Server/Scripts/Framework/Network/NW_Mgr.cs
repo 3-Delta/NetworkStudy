@@ -10,13 +10,14 @@ using Google.Protobuf;
 public class NW_Mgr : BS_ManagerBase<NW_Mgr>
 {
     private Socket socket;
+    public Map<short, NW_Transfer> clients { get; private set; } = new Map<short, NW_Transfer>();
+    public Map<NW_Transfer, short> transfers { get; private set; } = new Map<NW_Transfer, short>();
 
     public override void OnInit()
     {
-        BS_EventManager<BS_EProtoType>.Add(BS_EProtoType.OnAccepted, OnAccepted);
-        BS_EventManager<BS_EProtoType>.Add(BS_EProtoType.OnConnected, OnConnected);
-        BS_EventManager<BS_EProtoType>.Add(BS_EProtoType.OnDisConnected, OnDisConnected);
-        BS_EventManager<BS_EProtoType>.Add(BS_EProtoType.OnLost, OnLost);
+        BS_EventManager<BS_EEventType>.Add<NW_Transfer>(BS_EEventType.OnConnectSuccess, OnConnectSuccess);
+        BS_EventManager<BS_EEventType>.Add<NW_Transfer>(BS_EEventType.OnConnectFailed, OnConnectFailed);
+        BS_EventManager<BS_EEventType>.Add<NW_Transfer>(BS_EEventType.OnConnectLost, OnConnectLost);
 
         Listen(NW_Def.IPv4, NW_Def.PORT, NW_Def.ListenMax);
     }
@@ -45,9 +46,10 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
     {
         try
         {
+            // 取得客户端连接
             Socket client = socket.EndAccept(ar);
-            NW_Transfer transfer = new NW_Transfer(client);
-            transfer.BeginReceive();
+            Console.WriteLine("OnAccepted");
+            new NW_Transfer(client).BeginReceive();
         }
         catch (Exception e)
         {
@@ -57,14 +59,26 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
         // 继续监听其他客户端socket
         socket.BeginAccept(new System.AsyncCallback(OnAccepted), null);
     }
-    private void OnAccepted() { }
-    private void OnConnected() { }
-    private void OnDisConnected() { }
-    private void OnLost() { }
+    private void OnConnectSuccess(NW_Transfer transfer)
+    {
+
+    }
+    private void OnConnectFailed(NW_Transfer transfer)
+    {
+
+    }
+    private void OnConnectLost(NW_Transfer transfer)
+    {
+        Console.WriteLine("OnConnectLost" + transfer.ToString());
+        short playerID = transfers[transfer];
+        clients.Remove(playerID);
+        transfers.Remove(transfer);
+        transfer.DisConnect();
+    }
     #endregion
 
-    #region // 收发数据包
-    public void Send(ushort playerID, LC_EProtoType protoType, IMessage message)
+    #region // 发数据包
+    public void Send(short playerID, LC_EProtoType protoType, IMessage message)
     {
         using (System.IO.MemoryStream strenm = new System.IO.MemoryStream())
         {
@@ -72,25 +86,7 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
             Send(playerID, protoType, strenm.ToArray());
         }
     }
-    public void Send(ushort playerID, LC_EProtoType protoType, byte[] bytes) { Send(playerID, (ushort)protoType, bytes); }
-    public void Send(ushort playerID, ushort protoType, byte[] bytes)
-    {
-
-    }
-    #endregion
-
-    #region // transfers
-    public Dictionary<ushort, NW_Transfer> transfers { get; private set; } = new Dictionary<ushort, NW_Transfer>();
-
-    public bool Has(ushort playerID) { return transfers.ContainsKey(playerID); }
-    public bool TryGet(ushort playerID, out NW_Transfer transfer)
-    {
-        transfer = null;
-        if (Has(playerID)) { transfer = transfers[playerID]; }
-        return transfer != null;
-    }
-    public void Add(ushort playerID, NW_Transfer transfer) { if (!Has(playerID)) { transfers.Add(playerID, transfer); } }
-    public void Remove(ushort playerID) { if (Has(playerID)) { transfers.Remove(playerID); } }
-    public void Clear() { transfers.Clear(); }
+    private void Send(short playerID, LC_EProtoType protoType, byte[] bytes) { Send(playerID, (short)protoType, bytes); }
+    private void Send(short playerID, short protoType, byte[] bytes) { clients[playerID].Send(protoType, bytes); }
     #endregion
 }

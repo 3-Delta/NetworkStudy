@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public enum BS_EProtoType
+public class LC_Mail
 {
-    
+    public ulong mailID { get; private set; } = 0;
 }

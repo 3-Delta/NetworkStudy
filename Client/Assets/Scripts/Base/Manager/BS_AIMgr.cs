@@ -10,6 +10,5 @@ public class BS_AIMgr : BS_ManagerBase<BS_AIMgr>
     }
     public override void OnFixedUpdate(float fixedDeltaTime)
     {
-        Debug.LogError(fixedDeltaTime);
     }
 }

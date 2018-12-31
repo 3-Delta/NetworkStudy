@@ -31,7 +31,6 @@ public static class App
         {
             BS_LogicMgr.Instance.OnUpdate();
             Thread.Sleep(25);
-            Console.WriteLine("Update");
         }
     }
 }
