@@ -33,12 +33,12 @@ public class NW_Transfer
             }
             catch (Exception e)
             {
-                DicConnect();
+                DisConnect();
                 UnityEngine.Debug.Log("Connect Failed : " + e.Message);
             }
         }
     }
-    public void DicConnect()
+    public void DisConnect()
     {
         socket?.Close();
         socket = null;
@@ -59,7 +59,7 @@ public class NW_Transfer
         }
         catch (Exception e)
         {
-            DicConnect();
+            DisConnect();
             UnityEngine.Debug.Log("OnConnected Failed : " + e.Message);
         }
     }
@@ -73,7 +73,7 @@ public class NW_Transfer
             // 丢失连接
             if (read < 0)
             {
-                DicConnect();
+                DisConnect();
                 UnityEngine.Debug.Log("OnReceivedHead");
                 return;
             }
@@ -94,7 +94,7 @@ public class NW_Transfer
         }
         catch (Exception e)
         {
-            DicConnect();
+            DisConnect();
             UnityEngine.Debug.Log("OnReceivedHead Failed : " + e.ToString());
         }
     }
@@ -109,7 +109,7 @@ public class NW_Transfer
             // 断开连接
             if (read < 0)
             {
-                DicConnect();
+                DisConnect();
                 UnityEngine.Debug.Log("OnReceivedBody");
                 return;
             }
@@ -135,7 +135,7 @@ public class NW_Transfer
         }
         catch (Exception e)
         {
-            DicConnect();
+            DisConnect();
             UnityEngine.Debug.Log("OnReceivedBody Failed : " + e.ToString());
         }
     }
@@ -156,7 +156,7 @@ public class NW_Transfer
                 }
                 catch (System.Exception e)
                 {
-                    DicConnect();
+                    DisConnect();
                     Debug.LogError("Send Failed : " + protoType.ToString() + " " + e.ToString());
                 }
             }
@@ -167,7 +167,7 @@ public class NW_Transfer
         try { socket.EndSend(ar); }
         catch (System.Exception e)
         {
-            DicConnect();
+            DisConnect();
             Debug.LogError("EndSend Failed : " + e.ToString());
         }
     }
