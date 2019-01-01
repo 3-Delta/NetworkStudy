@@ -84,7 +84,7 @@ public struct NW_Package
 
     public NW_Package(short protoType, byte[] bytes)
     {
-        head = new NW_PackageHead(protoType, (short)bytes.Length, 1);
+        head = new NW_PackageHead(protoType, (short)bytes.Length, Sys_Player.Instance.playerID);
         body = new NW_PackageBody(bytes, 0, bytes.Length - 1);
         body.Decode(bytes, 0, bytes.Length - 1);
     }
