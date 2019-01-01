@@ -16,8 +16,12 @@ public class Sys_Player : BS_SystemBase<Sys_Player>
 
     private void OnReqLogin(NW_Package package)
     {
-        CSLogin sc = BS_T_Protobuf.DeSerialize<CSLogin>(CSLogin.Parser, package.body.bodyBytes);
-        Console.WriteLine("OnReqLogin : " + sc.PlayerID);
+        CSLogin cs = BS_T_Protobuf.DeSerialize<CSLogin>(CSLogin.Parser, package.body.bodyBytes);
+        Console.WriteLine("OnReqLogin : " + cs.PlayerID);
+
+        SCLogin sc = new SCLogin();
+        sc.PlayerID = 1277;
+        NW_Mgr.Instance.Send(package.head.playerID, LC_EProtoType.scLogin, sc);
     }
     private void OnReqLogout(NW_Package package)
     {

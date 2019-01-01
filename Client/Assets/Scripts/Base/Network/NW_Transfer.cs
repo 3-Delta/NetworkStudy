@@ -48,7 +48,6 @@ public class NW_Transfer
     #region // OnTransfer
     private void OnConnected(IAsyncResult ar)
     {
-        if (IsConnected) { return; }
         try
         {
             // 建立连接
@@ -178,7 +177,7 @@ public class NW_Transfer
             NW_Package package = new NW_Package();
             if (receivedQueue.Dequeue(ref package))
             {
-                BS_EventManager<LC_EProtoType>.Trigger<NW_PackageBody>((LC_EProtoType)package.head.protoType, package.body);
+                BS_EventManager<LC_EProtoType>.Trigger<NW_Package>((LC_EProtoType)package.head.protoType, package);
             }
         }
     }

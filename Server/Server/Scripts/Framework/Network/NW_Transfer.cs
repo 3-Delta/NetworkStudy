@@ -145,7 +145,6 @@ public class NW_Transfer
                 }
                 catch (System.Exception e)
                 {
-                    DisConnect();
                     BS_EventManager<BS_EEventType>.Trigger<NW_Transfer>(BS_EEventType.OnConnectLost, this);
                     Console.WriteLine("Send Failed : " + e.ToString());
                 }
@@ -160,7 +159,6 @@ public class NW_Transfer
         }
         catch (System.Exception e)
         {
-            DisConnect();
             BS_EventManager<BS_EEventType>.Trigger<NW_Transfer>(BS_EEventType.OnConnectLost, this);
             Console.WriteLine("EndSend Failed : " + e.ToString());
         }

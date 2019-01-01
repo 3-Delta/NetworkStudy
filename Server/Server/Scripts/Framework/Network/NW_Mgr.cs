@@ -48,7 +48,7 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
         {
             // 取得客户端连接
             Socket client = socket.EndAccept(ar);
-            Console.WriteLine("OnAccepted");
+            Console.WriteLine("OnAccepted: " + client);
             new NW_Transfer(client).BeginReceive();
         }
         catch (Exception e)
@@ -87,6 +87,6 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
         }
     }
     private void Send(short playerID, LC_EProtoType protoType, byte[] bytes) { Send(playerID, (short)protoType, bytes); }
-    private void Send(short playerID, short protoType, byte[] bytes) { clients[playerID].Send(protoType, bytes); }
+    private void Send(short playerID, short protoType, byte[] bytes) { clients[playerID]?.Send(protoType, bytes); }
     #endregion
 }
