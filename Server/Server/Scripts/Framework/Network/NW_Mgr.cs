@@ -32,7 +32,7 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
         {
             socket.Bind(ipe);
             socket.Listen(listenCount);
-            Console.WriteLine("Server Network Launch Success! Start Listenning...");
+            BS_Mgr_Log.LogError("Server Network Launch Success! Start Listenning...");
             socket.BeginAccept(new System.AsyncCallback(OnAccepted), null);
         }
         catch (Exception e)
