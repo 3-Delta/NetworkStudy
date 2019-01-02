@@ -32,6 +32,7 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
         {
             socket.Bind(ipe);
             socket.Listen(listenCount);
+            Console.WriteLine("Server Network Launch Success! Start Listenning...");
             socket.BeginAccept(new System.AsyncCallback(OnAccepted), null);
         }
         catch (Exception e)
@@ -48,7 +49,7 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
         {
             // 取得客户端连接
             Socket client = socket.EndAccept(ar);
-            Console.WriteLine("OnAccepted: " + client);
+            Console.WriteLine("Server Network Accepted Client! Start Receiving... " + client.GetHashCode());
             new NW_Transfer(client).BeginReceive();
         }
         catch (Exception e)

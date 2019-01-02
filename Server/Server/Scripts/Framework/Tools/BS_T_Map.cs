@@ -35,8 +35,11 @@ public class Map<Key, Value>
     }
     public void Add(Key key, Value value)
     {
-        if (!Has(key)) { dict.Add(key, value); }
-        else { dict[key] = value; }
+        if (key != null && value != null)
+        {
+            if (!Has(key)) { dict.Add(key, value); }
+            else { dict[key] = value; }
+        }
     }
     public void Remove(Key key) { if (Has(key)) { dict.Remove(key); } }
     public void Clear() { dict.Clear(); }

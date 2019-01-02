@@ -23,16 +23,6 @@ public class NW_Transfer
             NW_Package package = new NW_Package();
             if (receivedQueue.Dequeue(ref package))
             {
-                if ((LC_EProtoType)package.head.protoType == LC_EProtoType.csLogin)
-                {
-                    NW_Mgr.Instance.clients.Add(package.head.playerID, this);
-                    NW_Mgr.Instance.transfers.Add(this, package.head.playerID);
-                }
-                else if ((LC_EProtoType)package.head.protoType == LC_EProtoType.csLogout)
-                {
-                    NW_Mgr.Instance.clients.Remove(package.head.playerID);
-                    NW_Mgr.Instance.transfers.Remove(this);
-                }
                 BS_EventManager<LC_EProtoType>.Trigger<NW_Package>((LC_EProtoType)package.head.protoType, package);
             }
         }
@@ -114,6 +104,7 @@ public class NW_Transfer
             {
                 // 入队
                 buffer.package.body.Decode(buffer.buffer, NW_Def.PACKAGE_HEAD_SIZE, NW_Def.PACKAGE_HEAD_SIZE + buffer.package.head.size - 1);
+                TryProcessPackage(buffer);
                 receivedQueue.Enqueue(buffer.package);
 
                 // 保存已接收的数据
@@ -129,8 +120,24 @@ public class NW_Transfer
             Console.WriteLine("OnReceivedBody Failed : " + e.ToString());
         }
     }
+    private void TryProcessPackage(NW_Buffer buffer)
+    {
+        if (buffer != null)
+        {
+            if ((LC_EProtoType)buffer.package.head.protoType == LC_EProtoType.csLogin)
+            {
+                NW_Mgr.Instance.clients.Add(buffer.package.head.playerID, this);
+                NW_Mgr.Instance.transfers.Add(this, buffer.package.head.playerID);
+            }
+            else if ((LC_EProtoType)buffer.package.head.protoType == LC_EProtoType.csLogout)
+            {
+                NW_Mgr.Instance.clients.Remove(buffer.package.head.playerID);
+                NW_Mgr.Instance.transfers.Remove(this);
+            }
+        }
+    }
 
-    #region // 收发数据
+   #region // 收发数据
     public void Send(short protoType, byte[] bytes)
     {
         if (!IsConnected) { return; }
@@ -141,6 +148,7 @@ public class NW_Transfer
                 byte[] packageBytes = package.Encode();
                 try
                 {
+                    Console.WriteLine("Server Network Send Message To Client... " + (LC_EProtoType)protoType + " " + socket.GetHashCode());
                     socket.BeginSend(packageBytes, 0, packageBytes.Length, SocketFlags.None, new AsyncCallback(OnSend), null);
                 }
                 catch (System.Exception e)
@@ -153,10 +161,7 @@ public class NW_Transfer
     }
     private void OnSend(IAsyncResult ar)
     {
-        try
-        {
-            int read = socket.EndSend(ar);
-        }
+        try { socket.EndSend(ar); }
         catch (System.Exception e)
         {
             BS_EventManager<BS_EEventType>.Trigger<NW_Transfer>(BS_EEventType.OnConnectLost, this);
