@@ -1,1 +1,0 @@
-游戏逻辑相关的Manager, 后缀都是完整的Manager, 不是简写的，mgr，简写的mgr是框架层的mgr
