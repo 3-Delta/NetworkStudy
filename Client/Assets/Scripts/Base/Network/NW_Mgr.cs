@@ -13,6 +13,10 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
 
     public override void OnInit() { }
     public override void OnUpdate() { transfer?.Update(); }
+    public override void OnExit()
+    {
+        transfer?.OnExit();
+    }
 
     public void Connect(string ip, int port, System.Action callback = null) { transfer?.Connect(ip, port, callback); }
     public void Send(LC_EProtoType protoType, IMessage message)

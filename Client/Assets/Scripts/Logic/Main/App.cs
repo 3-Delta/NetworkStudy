@@ -10,6 +10,8 @@ public class App : MonoBehaviour
     }
     private void Init()
     {
+        Settings();
+        RegisterCallback();
         BS_LogicMgr.Instance.OnInit();
     }
     private void Update()
@@ -23,5 +25,14 @@ public class App : MonoBehaviour
     private void OnApplicationQuit()
     {
         BS_LogicMgr.Instance.OnExit();
+        Application.Quit();
+    }
+
+    private void Settings()
+    {
+        Application.runInBackground = true;
+    }
+    private void RegisterCallback()
+    {
     }
 }

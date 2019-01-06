@@ -18,6 +18,7 @@ public class NW_Transfer
     {
         this.socket = socket;
     }
+    public void OnExit() { socket?.Close(); }
 
     #region // Connect
     public void Connect(string ip, int port, System.Action callback = null) { Connect(IPAddress.Parse(ip), port, callback); }
