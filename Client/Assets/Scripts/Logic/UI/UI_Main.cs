@@ -19,21 +19,29 @@ public class UI_Main : MonoBehaviour
         btnLogin.onClick.AddListener(OnBtnLoginClicked);
 
         thread = new System.Threading.Thread(new System.Threading.ThreadStart(Log));
+        /*
+         * https://blog.csdn.net/gy373499700/article/details/46970243
+            1、当在主线程中创建了一个线程，那么该线程的IsBackground默认是设置为FALSE的。  描述正确
+            2、当主线程退出的时候，IsBackground=FALSE的线程还会继续执行下去，直到线程执行结束。 描述正确
+            3、只有IsBackground=TRUE的线程才会随着主线程的退出而退出 描述错误
+         */
+        // 默认false
+        // thread.IsBackground = true;
         thread.Start();
-    }
-    private void Log()
-    {
-        while (true)
-        {
-            Thread.Sleep(200);
-            // 线程中使用unity的class[非struct], 会导致报错：get_gameObject can only be called from the main thread.
-            btnMail.interactable = false;
-            Debug.LogError("--------");
-        }
     }
     private void OnDestroy()
     {
         thread?.Abort();
+    }
+    private void Log()
+    {
+        {
+            while (true)
+            {
+                Thread.Sleep(200);
+                Debug.LogError("--------");
+            }
+        };
     }
 
     private void OnBtnLunchClicked()
