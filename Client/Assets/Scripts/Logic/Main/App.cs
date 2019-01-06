@@ -25,7 +25,6 @@ public class App : MonoBehaviour
     private void OnApplicationQuit()
     {
         BS_LogicMgr.Instance.OnExit();
-        Application.Quit();
     }
 
     private void Settings()
