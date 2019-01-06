@@ -8,7 +8,7 @@ using UnityEngine;
 // 单个transfer, 将来可能多个transfer协作
 public class NW_Transfer
 {
-    
+
     private Socket socket = null;
     public bool IsConnected { get { return socket != null && socket.Connected; } }
     public NW_Queue receivedQueue { get; private set; } = new NW_Queue();
@@ -54,12 +54,58 @@ public class NW_Transfer
             socket.EndConnect(ar);
             // 收发数据
             buffer.Clear();
-            socket.BeginReceive(buffer.buffer, 0, NW_Def.PACKAGE_HEAD_SIZE, SocketFlags.None, new AsyncCallback(OnReceivedHead), buffer);
+            //socket.BeginReceive(buffer.buffer, 0, NW_Def.PACKAGE_HEAD_SIZE, SocketFlags.None, new AsyncCallback(OnReceivedHead), buffer);
+            socket.BeginReceive(buffer.buffer, 0, NW_Def.PACKAGE_HEAD_SIZE, SocketFlags.None, new AsyncCallback(OnReceivedPackage), buffer);
         }
         catch (Exception e)
         {
             DisConnect();
             UnityEngine.Debug.Log("OnConnected Failed : " + e.Message);
+        }
+    }
+    private void OnReceivedPackage(IAsyncResult ar)
+    {
+        NW_Buffer buffer = (NW_Buffer)ar.AsyncState;
+        try
+        {
+            SocketError errCode = SocketError.Success;
+            int read = socket.EndReceive(ar, out errCode);
+            // 丢失连接
+            if (read < 0)
+            {
+                DisConnect();
+                Console.WriteLine("OnReceivedPackage");
+                return;
+            }
+            buffer.realLength += read;
+            if (buffer.realLength < NW_Def.PACKAGE_HEAD_SIZE)
+            {
+                socket.BeginReceive(buffer.buffer, buffer.realLength, NW_Def.PACKAGE_HEAD_SIZE - buffer.realLength, SocketFlags.None, new AsyncCallback(OnReceivedPackage), buffer);
+            }
+            else
+            {
+                buffer.package.head.Decode(buffer.buffer, 0, NW_Def.PACKAGE_HEAD_SIZE - 1);
+                if (buffer.realLength < buffer.package.head.size + NW_Def.PACKAGE_HEAD_SIZE)
+                {
+                    socket.BeginReceive(buffer.buffer, buffer.realLength, buffer.package.head.size - (buffer.realLength - NW_Def.PACKAGE_HEAD_SIZE), SocketFlags.None, new AsyncCallback(OnReceivedBody), buffer);
+                }
+                else
+                {
+                    buffer.package.body.Decode(buffer.buffer, NW_Def.PACKAGE_HEAD_SIZE, NW_Def.PACKAGE_HEAD_SIZE + buffer.package.head.size - 1);
+                    receivedQueue.Enqueue(buffer.package);
+
+                    // 保存已接收的数据
+                    int remainLength = buffer.realLength - buffer.package.head.size - NW_Def.PACKAGE_HEAD_SIZE;
+                    Buffer.BlockCopy(buffer.buffer, buffer.package.head.size, buffer.buffer, 0, remainLength);
+                    buffer.realLength = remainLength;
+                    socket.BeginReceive(buffer.buffer, buffer.realLength, NW_Def.PACKAGE_HEAD_SIZE - buffer.realLength, SocketFlags.None, new AsyncCallback(OnReceivedPackage), buffer);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            DisConnect();
+            Console.WriteLine("OnReceivedPackage Failed : " + e.ToString());
         }
     }
     private void OnReceivedHead(IAsyncResult ar)
