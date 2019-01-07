@@ -21,11 +21,8 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
     public void Connect(string ip, int port, System.Action callback = null) { transfer?.Connect(ip, port, callback); }
     public void Send(LC_EProtoType protoType, IMessage message)
     {
-        using (System.IO.MemoryStream strenm = new System.IO.MemoryStream())
-        {
-            message.WriteTo(strenm);
-            Send(protoType, strenm.ToArray());
-        }
+        byte[] bytes = BS_T_Protobuf.Serialize(message);
+        if (bytes != null) { Send(protoType, bytes); }
     }
     private void Send(LC_EProtoType protoType, byte[] bytes) { Send((short)protoType, bytes); }
     private void Send(short protoType, byte[] bytes) { transfer?.Send(protoType, bytes); }
