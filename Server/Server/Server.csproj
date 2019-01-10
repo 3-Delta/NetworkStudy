@@ -121,9 +121,9 @@
     <Compile Include="Scripts\Framework\Network\NW_Package.cs" />
     <Compile Include="Scripts\Framework\Network\NW_Queue.cs" />
     <Compile Include="Scripts\Framework\Network\NW_Transfer.cs" />
-    <Compile Include="Scripts\Framework\Network\Protos\Common.cs" />
-    <Compile Include="Scripts\Framework\Network\Protos\Login.cs" />
-    <Compile Include="Scripts\Framework\Network\Protos\Mail.cs" />
+    <Compile Include="Scripts\Logic\Define\Protos\Common.cs" />
+    <Compile Include="Scripts\Logic\Define\Protos\Login.cs" />
+    <Compile Include="Scripts\Logic\Define\Protos\Mail.cs" />
     <Compile Include="Scripts\Framework\Tools\BS_T_Network.cs" />
     <Compile Include="Scripts\Framework\Tools\BS_T_Json.cs" />
     <Compile Include="Scripts\Framework\Tools\BS_T_Object.cs" />

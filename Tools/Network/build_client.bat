@@ -8,7 +8,7 @@ echo curPath = %curPath%
 set sourcePath=%curPath:Tools\Network=Resources\Protos%
 echo sourcePath = %sourcePath%
 
-set destPath=%curPath:Tools\Network=Client\Assets\Scripts\Network\Protos%
+set destPath=%curPath:Tools\Network=Client\Assets\Scripts\Logic\Define\Protos%
 echo destPath = %destPath%
 
 google\bin\protoc.exe -I=%sourcePath% --csharp_out=%destPath% Common.proto
