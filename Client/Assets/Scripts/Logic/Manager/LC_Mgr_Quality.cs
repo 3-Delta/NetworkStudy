@@ -4,6 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class Sys_Sync
+public class LC_Mgr_Quality : BS_ManagerBase<LC_Mgr_Quality>
 {
 }

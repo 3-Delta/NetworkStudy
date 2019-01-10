@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class BS_SystemBaseCallback
 {
-	public virtual void OnInit() {}
+    // 是否收到服务器关于该系统的登录回包
+    public bool isReceived { get; protected set; } = false;
+
+    public virtual void OnInit() { isReceived = false; }
     public virtual void OnBeforeLogin() { }
-    public virtual void OnLogin() {}
-	public virtual void OnLogout() {}
-	public virtual void OnUpdate() {}
-	public virtual void OnExit() {}
+    public virtual void OnLogin() { }
+	public virtual void OnLogout() { isReceived = false; }
+	public virtual void OnUpdate() { }
+	public virtual void OnExit() { isReceived = false; }
 }
 
 public class BS_SystemBase<T> : BS_SystemBaseCallback where T : class, new()

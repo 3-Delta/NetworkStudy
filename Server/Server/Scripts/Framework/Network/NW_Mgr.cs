@@ -22,6 +22,15 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
         Listen(NW_Def.IPv4, NW_Def.PORT, NW_Def.ListenMax);
     }
 
+    public override void OnExit()
+    {
+        foreach (var kvp in transfers.dict) { kvp.Key.OnExit(); }
+        transfers.Clear();
+        clients.Clear();
+        socket?.Close();
+        socket = null;
+    }
+
     #region // 连接
     public void Listen(string ip, int port, int listenCount) { Listen(IPAddress.Parse(ip), port, listenCount); }
     public void Listen(IPAddress ip, int port, int listenCount) { Listen(new IPEndPoint(ip, port), listenCount); }

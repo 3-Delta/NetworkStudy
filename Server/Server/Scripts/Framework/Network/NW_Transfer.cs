@@ -33,6 +33,11 @@ public class NW_Transfer
         receivedThread = new System.Threading.Thread(new System.Threading.ThreadStart(ReceivedThreadUpdate));
         receivedThread.Start();
     }
+    public void OnExit()
+    {
+        receivedThread?.Abort();
+        DisConnect();
+    }
     public void DisConnect()
     {
         socket?.Close();
