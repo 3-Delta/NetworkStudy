@@ -84,7 +84,8 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
         using (System.IO.MemoryStream strenm = new System.IO.MemoryStream())
         {
             message.WriteTo(strenm);
-            Send(playerID, protoType, strenm.ToArray());
+            if(playerID == -1) { foreach(var kvp in clients) { kvp.Value.Send(protoType, bytes); } }
+            else { Send(playerID, protoType, strenm.ToArray()); }
         }
     }
     private void Send(short playerID, LC_EProtoType protoType, byte[] bytes) { Send(playerID, (short)protoType, bytes); }
