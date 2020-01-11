@@ -66,6 +66,8 @@ public class NW_Transfer
     }
     private void OnReceivedPackage(IAsyncResult ar)
     {
+        Debug.LogError("OnReceivedPackage: " + System.Threading.Thread.CurrentThread.ManagedThreadId);
+        
         NW_Buffer buffer = (NW_Buffer)ar.AsyncState;
         try
         {
@@ -111,6 +113,8 @@ public class NW_Transfer
     }
     private void OnReceivedHead(IAsyncResult ar)
     {
+        Debug.LogError("OnReceivedHead: " + System.Threading.Thread.CurrentThread.ManagedThreadId);
+        
         NW_Buffer buffer = (NW_Buffer)ar.AsyncState;
         try
         {
@@ -147,6 +151,8 @@ public class NW_Transfer
 
     private void OnReceivedBody(IAsyncResult ar)
     {
+        Debug.LogError("OnReceivedBody: " + System.Threading.Thread.CurrentThread.ManagedThreadId);
+        
         NW_Buffer buffer = (NW_Buffer)ar.AsyncState;
         try
         {
@@ -190,6 +196,8 @@ public class NW_Transfer
     #region // 收发数据
     public void Send(short protoType, byte[] bytes)
     {
+        Debug.LogError("Send: " + System.Threading.Thread.CurrentThread.ManagedThreadId);
+        
         if (IsConnected)
         {
             if (bytes.Length <= NW_Def.PACKAGE_BODY_MAX_SIZE)
