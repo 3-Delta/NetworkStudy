@@ -21,9 +21,9 @@ namespace FSM
 {
     public interface BS_IState : BS_IName
     {
-        // ËùÊô×´Ì¬»ú
+        // æ‰€å±çŠ¶æ€æœº
         BS_IStateMachine machine { get; set; }
-        // ËùÊô×´Ì¬Ã¶¾Ù
+        // æ‰€å±çŠ¶æ€æšä¸¾
         string name{ get; }
         float time { get; }
 
@@ -31,7 +31,7 @@ namespace FSM
         void Exit(BS_IState next);
         void Update(float deltaTime);
 
-        // ×´Ì¬×ª»»Ïà¹Ø½Ó¿Ú
+        // çŠ¶æ€è½¬æ¢ç›¸å…³æ¥å£
         List<BS_ITransition> transitions { get; }
         void AddTransition(BS_ITransition target);
         void RemoveTransition(BS_ITransition target);
