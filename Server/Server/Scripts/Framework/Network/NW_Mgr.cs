@@ -79,7 +79,7 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
     }
     private void OnConnectLost(NW_Transfer transfer)
     {
-        Console.WriteLine("OnConnectLost" + transfer.ToString());
+        Console.WriteLine("OnConnectLost --> transfer " + transfer.ToString());
         short playerID = transfers[transfer];
         clients.Remove(playerID);
         transfers.Remove(transfer);

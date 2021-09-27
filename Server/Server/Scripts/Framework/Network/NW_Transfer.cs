@@ -58,10 +58,9 @@ public class NW_Transfer
             SocketError errCode = SocketError.Success;
             int read = socket.EndReceive(ar, out errCode);
             // 丢失连接
-            if (read < 0)
+            if (read <= 0)
             {
                 BS_EventManager<BS_EEventType>.Trigger<NW_Transfer>(BS_EEventType.OnConnectLost, this);
-                Console.WriteLine("OnReceivedPackage");
                 return;
             }
             buffer.realLength += read;
@@ -103,10 +102,9 @@ public class NW_Transfer
             SocketError errCode = SocketError.Success;
             int read = socket.EndReceive(ar, out errCode);
             // 丢失连接
-            if (read < 0)
+            if (read <= 0)
             {
                 BS_EventManager<BS_EEventType>.Trigger<NW_Transfer>(BS_EEventType.OnConnectLost, this);
-                Console.WriteLine("OnReceivedHead");
                 return;
             }
 
@@ -138,10 +136,9 @@ public class NW_Transfer
             SocketError errCode = SocketError.Success;
             int read = socket.EndReceive(ar, out errCode);
             // 断开连接
-            if (read < 0)
+            if (read <= 0)
             {
                 BS_EventManager<BS_EEventType>.Trigger<NW_Transfer>(BS_EEventType.OnConnectLost, this);
-                Console.WriteLine("OnReceivedBody");
                 return;
             }
 

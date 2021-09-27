@@ -48,3 +48,15 @@
 /Server/Server/Server.csproj
 /Client/Logs
 /Client/.idea
+/Client/ProjectSettings/ProjectVersion.txt
+/Client/.vsconfig
+/Client/Assembly-CSharp.Player.csproj
+/Client/Unity.Rider.Editor.csproj
+/Client/UnityEditor.SpatialTracking.csproj
+/Client/UnityEditor.TestRunner.csproj
+/Client/UnityEditor.UI.csproj
+/Client/UnityEditor.XR.LegacyInputHelpers.csproj
+/Client/UnityEngine.SpatialTracking.csproj
+/Client/UnityEngine.TestRunner.csproj
+/Client/UnityEngine.UI.csproj
+/Client/UnityEngine.XR.LegacyInputHelpers.csproj
