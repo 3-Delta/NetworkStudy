@@ -18,17 +18,10 @@ using UnityEditor;
 
 public static class BS_ManagerList
 {
-    // BS_ManagerMgrºÍBS_DriveMgr²»ÄÜ·ÅÈë
+    // BS_ManagerMgrï¿½ï¿½BS_DriveMgrï¿½ï¿½ï¿½Ü·ï¿½ï¿½ï¿½
     public readonly static List<BS_ManagerBaseCallback> list = new List<BS_ManagerBaseCallback>()
     {
         NW_Mgr.Instance,
         BS_AIMgr.Instance,
-        BS_CameraMgr.Instance,
-        BS_FxMgr.Instance,
-        BS_QualityMgr.Instance,
-        BS_ResourceMgr.Instance,
-        BS_SceneMgr.Instance,
-        BS_TimeMgr.Instance,
-        BS_UIMgr.Instance,
     };
 }

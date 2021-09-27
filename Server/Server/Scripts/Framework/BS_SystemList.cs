@@ -7,6 +7,5 @@ public static class BS_SystemList
 	{
         Sys_Mail.Instance,
         Sys_Player.Instance,
-        Sys_Battle.Instance,
     };
 }
