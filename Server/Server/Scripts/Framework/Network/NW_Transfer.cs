@@ -40,7 +40,13 @@ public class NW_Transfer
     }
     public void DisConnect()
     {
-        socket?.Close();
+        try {
+            socket?.Shutdown(SocketShutdown.Both);
+            socket?.Close();
+        }
+        catch (Exception _) { 
+        }
+
         socket = null;
     }
     public void BeginReceive()

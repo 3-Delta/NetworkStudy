@@ -2,8 +2,6 @@
 using System.Net;
 using System.Net.Sockets;
 
-using UnityEngine;
-
 // 单个transfer, 将来可能多个transfer协作
 public class NW_Transfer {
 
@@ -21,8 +19,10 @@ public class NW_Transfer {
 
 
     #region // Connect
-    public void Connect(string ip, int port, System.Action callback = null) { this.Connect(IPAddress.Parse(ip), port, callback); }
-    public void Connect(IPAddress ip, int port, System.Action callback = null) { this.Connect(new IPEndPoint(ip, port), callback); }
+    public void Connect(string ip, int port, System.Action callback = null) {
+        this.Connect(IPAddress.Parse(ip), port, callback); }
+    public void Connect(IPAddress ip, int port, System.Action callback = null) { 
+        this.Connect(new IPEndPoint(ip, port), callback); }
     public void Connect(IPEndPoint ipe, System.Action callback = null) {
         this.socket = this.socket ?? BS_T_Network.BuildSocket4TCP(ipe.AddressFamily);
         if (!this.IsConnected) {
@@ -36,7 +36,12 @@ public class NW_Transfer {
         }
     }
     public void DisConnect() {
-        this.socket?.Close();
+        try {
+            socket?.Shutdown(SocketShutdown.Both);
+            socket?.Close();
+        }
+        catch (Exception _) {
+        }
         this.socket = null;
     }
     #endregion
