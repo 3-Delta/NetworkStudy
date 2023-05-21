@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
+using Google.Protobuf;
 
 // 单个transfer,在服务器模式中，代表一个与服务器连接的客户端
 public class NW_Transfer
@@ -17,10 +18,10 @@ public class NW_Transfer
         }
     }
 
-    public NW_Queue combineReceivedQueue { get; private set; } = new NW_Queue();
-    public NW_Queue receivedQueue { get; private set; } = new NW_Queue();
+    public NW_PackageQueue packageQueue { get; private set; } = new NW_PackageQueue();
+    public NW_MessageQueue messageQueue { get; private set; } = new NW_MessageQueue();
 
-    public NW_Queue sendQueue { get; private set; } = new NW_Queue();
+    public NW_MessageQueue sendQueue { get; private set; } = new NW_MessageQueue();
 
     private System.Threading.Thread receivedThread = null;
 
@@ -31,10 +32,12 @@ public class NW_Transfer
         {
             System.Threading.Thread.Sleep(30);
 
-            NW_Package package = new NW_Package();
-            if (receivedQueue.Dequeue(ref package))
+            while (this.messageQueue.Count > 0)
             {
-                BS_EventManager<LC_EProtoType>.Trigger<NW_Package>((LC_EProtoType)package.head.protoType, package);
+                if (this.messageQueue.Dequeue(out NW_ReceiveMessage message))
+                {
+                    NWDelegateService.Fire(message.protoType, message);
+                }
             }
         }
     }
@@ -142,15 +145,18 @@ public class NW_Transfer
             {
                 // 接收到一个包，判断该包有没有后续序列包
                 buffer.package.body.Decode(buffer.buffer, NW_Def.PACKAGE_HEAD_SIZE, NW_Def.PACKAGE_HEAD_SIZE + buffer.package.head.size - 1);
-                this.combineReceivedQueue.Enqueue(buffer.package);
+                this.packageQueue.Enqueue(buffer.package);
 
                 if (buffer.package.head.segmentIndex == buffer.package.head.segmentCount - 1)
                 {
-                    var pkg = this.combineReceivedQueue.Combine();
-                    this.combineReceivedQueue.Clear();
+                    NW_ReceiveMessage receiveMessage = new NW_ReceiveMessage();
+                    receiveMessage.playerId = buffer.package.head.playerID;
+                    receiveMessage.protoType = buffer.package.head.protoType;
+                    receiveMessage.bytes = this.packageQueue.Combine().ToArray();
 
-                    TryProcessPackage(ref pkg);
-                    this.receivedQueue.Enqueue(pkg);
+                    TryProcessClient(buffer.package.head.protoType, buffer.package.head.playerID);
+                    this.packageQueue.Clear();
+                    this.messageQueue.Enqueue(receiveMessage);
                 }
 
                 // 保存已接收的数据
@@ -166,27 +172,28 @@ public class NW_Transfer
             Console.WriteLine("OnReceivedBody Failed : " + e.ToString());
         }
     }
-    private void TryProcessPackage(ref NW_Package package)
+    private void TryProcessClient(ushort protoType, ushort playerId)
     {
-        if ((LC_EProtoType)package.head.protoType == LC_EProtoType.csLogin)
+        if ((LC_EProtoType)protoType == LC_EProtoType.csLogin)
         {
-            NW_Mgr.Instance.clients.Add(package.head.playerID, this);
-            NW_Mgr.Instance.transfers.Add(this, package.head.playerID);
+            NW_Mgr.Instance.clients.Add(playerId, this);
+            NW_Mgr.Instance.transfers.Add(this, playerId);
         }
-        else if ((LC_EProtoType)package.head.protoType == LC_EProtoType.csLogout)
+        else if ((LC_EProtoType)protoType == LC_EProtoType.csLogout)
         {
-            NW_Mgr.Instance.clients.Remove(package.head.playerID);
+            NW_Mgr.Instance.clients.Remove(playerId);
             NW_Mgr.Instance.transfers.Remove(this);
         }
     }
 
     #region // 收发数据
-    public void Send(ushort protoType, byte[] bytes)
+    public void Send(ushort protoType, IMessage message)
     {
         if (this.IsConnected)
         {
-            int segCount = (int)Math.Ceiling(1.0 * bytes.Length / NW_Def.PACKAGE_BODY_MAX_SIZE);
-            if (segCount > byte.MaxValue)
+            byte[] messageBytes = ProtobufUtils.Serialize(message);
+            int packageCount = (int)Math.Ceiling(1f * messageBytes.Length / NW_Def.PACKAGE_BODY_MAX_SIZE);
+            if (packageCount > byte.MaxValue)
             {
                 Console.WriteLine($"{protoType.ToString()} 数据包太大，即使切分之后还是过大");
                 return;
@@ -195,15 +202,14 @@ public class NW_Transfer
             {
                 Console.WriteLine("Server Network Send Message To Client... " + (LC_EProtoType)protoType + " " + socket.GetHashCode());
                 byte[] packageBytes;
-                if (segCount <= 1)
+                if (packageCount <= 1)
                 {
-                    NW_Package package = new NW_Package(protoType, bytes, 0, (ushort)bytes.Length, 0, 1);
+                    NW_Package package = new NW_Package(protoType, messageBytes, 0, (ushort)messageBytes.Length, 0, 1);
                     packageBytes = package.Encode();
 
                     try
                     {
-                        Console.WriteLine("Server Network Send Message To Client... " + (LC_EProtoType)protoType + " " + socket.GetHashCode() + " 1/1");
-                        socket.BeginSend(packageBytes, 0, packageBytes.Length, SocketFlags.None, new AsyncCallback(OnSend), null);
+                        this.socket.BeginSend(packageBytes, 0, packageBytes.Length, SocketFlags.None, new AsyncCallback(this.OnSend), null);
                     }
                     catch (System.Exception e)
                     {
@@ -214,21 +220,21 @@ public class NW_Transfer
                 else
                 {
                     int i = 0;
-                    while (i < segCount)
+                    while (i < packageCount)
                     {
                         int beginIndex = i * NW_Def.PACKAGE_BODY_MAX_SIZE;
-                        ushort segLength = NW_Def.PACKAGE_BODY_MAX_SIZE;
-                        if (i == segCount - 1)
+                        ushort packageLength = NW_Def.PACKAGE_BODY_MAX_SIZE;
+                        if (i == packageCount - 1)
                         {
-                            segLength = (ushort)(bytes.Length - beginIndex);
+                            packageLength = (ushort)(messageBytes.Length - beginIndex);
                         }
 
-                        NW_Package package = new NW_Package(protoType, bytes, beginIndex, segLength, (byte)(i++), (byte)segCount);
+                        NW_Package package = new NW_Package(protoType, messageBytes, beginIndex, packageLength, (byte)(i++), (byte)packageCount);
                         packageBytes = package.Encode();
 
                         try
                         {
-                            Console.WriteLine("Server Network Send Message To Client... " + (LC_EProtoType)protoType + " " + socket.GetHashCode() + $" {i + 1}/{segCount}");
+                            Console.WriteLine("Server Network Send Message To Client... " + (LC_EProtoType)protoType + " " + socket.GetHashCode() + $" {i}/{packageCount}");
                             this.socket.BeginSend(packageBytes, 0, packageBytes.Length, SocketFlags.None, new AsyncCallback(this.OnSend), null);
                         }
                         catch (System.Exception e)

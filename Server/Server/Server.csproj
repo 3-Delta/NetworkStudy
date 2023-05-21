@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Enum2Int">
+      <HintPath>Scripts\Framework\Event\Enum2Int.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Protobuf, Version=3.6.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Scripts\Logic\Deps\Protobuf\Google.Protobuf.dll</HintPath>
@@ -90,8 +93,11 @@
     <Compile Include="Scripts\Framework\BS_SystemList.cs" />
     <Compile Include="Scripts\Framework\BS_SystemMgr.cs" />
     <Compile Include="Scripts\Framework\Event\BS_EventManager.cs" />
+    <Compile Include="Scripts\Framework\Event\DelegateService.cs" />
     <Compile Include="Scripts\Framework\Manager\BS_Mgr_Log.cs" />
     <Compile Include="Scripts\Framework\Manager\BS_Mgr_Time.cs" />
+    <Compile Include="Scripts\Framework\Network\NWDelegateService.cs" />
+    <Compile Include="Scripts\Framework\Network\NW_Message.cs" />
     <Compile Include="Scripts\Logic\Define\LC_EEventType.cs" />
     <Compile Include="Scripts\Logic\Define\LC_EProtoType.cs" />
     <Compile Include="Scripts\Logic\Main\App.cs" />
@@ -113,7 +119,7 @@
     <Compile Include="Scripts\Logic\Define\Protos\Mail.cs" />
     <Compile Include="Scripts\Framework\Tools\BS_T_Network.cs" />
     <Compile Include="Scripts\Framework\Tools\BS_T_Object.cs" />
-    <Compile Include="Scripts\Framework\Tools\BS_T_Protobuf.cs" />
+    <Compile Include="Scripts\Framework\Tools\ProtobufUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

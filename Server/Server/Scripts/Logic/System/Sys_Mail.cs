@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using ProtobufNet;
+using Google.Protobuf;
 
 public class Sys_Mail : BS_SystemBase<Sys_Mail>
 {
@@ -9,15 +10,15 @@ public class Sys_Mail : BS_SystemBase<Sys_Mail>
 
     public override void OnInit()
     {
-        BS_EventManager<LC_EProtoType>.Handle<NW_Package>(LC_EProtoType.csReadMail, OnReqReadMail, true);
+        NWDelegateService.Handle<NW_ReceiveMessage>(0, (ushort)LC_EProtoType.csReadMail, OnReqReadMail, CSReadMail.Parser, true);
     }
 
-    public void OnReqReadMail(NW_Package package)
+    public void OnReqReadMail(NW_ReceiveMessage message)
     {
-        CSReadMail cs = BS_T_Protobuf.DeSerialize<CSReadMail>(CSReadMail.Parser, package.body.bodyBytes);
+        CSReadMail cs = message.message as CSReadMail;
         SCReadMail sc = new SCReadMail();
         sc.MailID = 12578;
-        sc.MailContent = "Server: " + cs.MailContent;
-        NW_Mgr.Instance.Send(package.head.playerID, LC_EProtoType.scReadMail, sc);
+        sc.MailContent = "Server: |||" + cs.MailContent;
+        NW_Mgr.Instance.Send(message.playerId, LC_EProtoType.scReadMail, sc);
     }
 }

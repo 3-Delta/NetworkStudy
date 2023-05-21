@@ -1,30 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System;
+using Google.Protobuf;
 
-public class NW_Queue {
-    private Queue<NW_Package> packageQueue = new Queue<NW_Package>();
+public class NW_Queue<T> {
+    protected Queue<T> queue = new Queue<T>();
 
-    public int Count => packageQueue.Count;
+    public int Count => this.queue.Count;
 
     public NW_Queue() {
         Clear();
     }
 
     public void Clear() {
-        packageQueue.Clear();
+        this.queue.Clear();
     }
 
-    public void Enqueue(NW_Package package) {
-        lock (packageQueue) {
-            packageQueue.Enqueue(package);
+    public void Enqueue(T package) {
+        lock (this.queue) {
+            this.queue.Enqueue(package);
         }
     }
 
-    public bool Dequeue(ref NW_Package package) {
-        lock (packageQueue) {
-            if (packageQueue.Count > 0) {
-                package = packageQueue.Dequeue();
+    public bool Dequeue(out T package) {
+        package = default;
+        lock (this.queue) {
+            if (this.queue.Count > 0) {
+                package = this.queue.Dequeue();
                 return true;
             }
             else {
@@ -32,30 +34,25 @@ public class NW_Queue {
             }
         }
     }
+}
 
-    public NW_Package Combine() {
-        lock (packageQueue) {
-            NW_Package pkg = new NW_Package();
+public class NW_PackageQueue : NW_Queue<NW_Package> {
+    public List<byte> Combine() {
+        lock (this.queue) {
             int i = 0;
             List<byte> ls = new List<byte>();
-            while (this.packageQueue.Count > 0) {
-                var one = this.packageQueue.Dequeue();
-                if (i == 0) {
-                    pkg.head.protoType = one.head.protoType;
-                    pkg.head.randomKey = one.head.randomKey;
-                    pkg.head.playerID = one.head.playerID;
-                }
-
+            while (this.queue.Count > 0) {
+                var one = this.queue.Dequeue();
                 if (one.body.bodyBytes != null) {
                     ls.AddRange(one.body.bodyBytes);
                 }
 
-                pkg.head.size += one.head.size;
                 ++i;
             }
 
-            pkg.body.bodyBytes = ls.ToArray();
-            return pkg;
+            return ls;
         }
     }
 }
+
+public class NW_MessageQueue : NW_Queue<NW_ReceiveMessage> { }

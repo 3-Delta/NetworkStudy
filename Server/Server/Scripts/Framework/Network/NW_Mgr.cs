@@ -4,6 +4,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using Google.Protobuf;
+using System.IO;
 
 // https://github.com/Headbangeerr/ForestWar/blob/master/GameServer/GameServer/Servers/Client.cs
 // https://www.jianshu.com/p/fa959d16eaed
@@ -90,29 +91,25 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
     #region // 发数据包
     public void Send(ushort playerID, LC_EProtoType protoType, IMessage message)
     {
-        using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
+        if (playerID == ushort.MaxValue)
         {
-            message.WriteTo(stream);
-            if (playerID == ushort.MaxValue)
+            foreach (var kvp in clients.dict)
             {
-                foreach (var kvp in clients.dict)
-                {
-                    kvp.Value.Send((ushort)protoType, stream.ToArray());
-                }
-            }
-            else
-            {
-                Send(playerID, protoType, stream.ToArray());
+                kvp.Value.Send((ushort)protoType, message);
             }
         }
+        else
+        {
+            Send(playerID, (ushort)protoType, message);
+        }
     }
-    private void Send(ushort playerID, LC_EProtoType protoType, byte[] bytes)
+    private void Send(ushort playerID, ushort protoType, IMessage message)
     {
-        Send(playerID, (ushort)protoType, bytes);
-    }
-    private void Send(ushort playerID, ushort protoType, byte[] bytes)
-    {
-        clients[playerID]?.Send(protoType, bytes);
+        var client = clients[playerID];
+        if (client != null)
+        {
+            client.Send(protoType, message);
+        }
     }
     #endregion
 }

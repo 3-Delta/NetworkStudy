@@ -6,7 +6,9 @@ public class BS_LogicMgr : Singleton<BS_LogicMgr>
 {
 	public void OnInit()
 	{
+        SystemMgr.Instance.Register(BS_SystemRegistry.registry);
 		SystemMgr.Instance.OnInit();
+        
         BS_ManagerMgr.Instance.OnInit();
         BS_ControllerMgr.Instance.OnInit();
     }

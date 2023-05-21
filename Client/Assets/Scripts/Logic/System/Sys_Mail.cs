@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System;
+using Google.Protobuf;
 using ProtobufNet;
 
 public class Sys_Mail : SystemBase<Sys_Mail> {
@@ -11,7 +12,7 @@ public class Sys_Mail : SystemBase<Sys_Mail> {
     private Map<ulong, MailEntry> mails = new Map<ulong, MailEntry>();
 
     public override void OnInit() {
-        BS_EventManager<LC_EProtoType>.Handle<NW_Package>(LC_EProtoType.scReadMail, RespReadMail, true);
+        NWDelegateService.Handle((ushort)LC_EProtoType.csReadMail, (ushort)LC_EProtoType.scReadMail, RespReadMail, SCReadMail.Parser, true);
     }
 
     public void ReqReadMail() {
@@ -2133,8 +2134,8 @@ DontLinger
         NW_Mgr.Instance.Send(LC_EProtoType.csReadMail, cs);
     }
 
-    public void RespReadMail(NW_Package package) {
-        SCReadMail sc = ProtobufUtils.DeSerialize<SCReadMail>(SCReadMail.Parser, package.body.bodyBytes);
-        UnityEngine.Debug.LogError("RespReadMail" + sc.MailID + " " + sc.MailContent);
+    public void RespReadMail(IMessage msg) {
+        var res = msg as SCReadMail;
+        UnityEngine.Debug.LogError("RespReadMail" + res.MailID + " " + res.MailContent.Length + " \n" + res.MailContent);
     }
 }
