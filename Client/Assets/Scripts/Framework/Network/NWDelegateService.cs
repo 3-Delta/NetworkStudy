@@ -6,33 +6,31 @@ using UnityEngine;
 
 public static class NWDelegateService {
     public interface IHandler {
-        void Handle(Action<IMessage> callback, bool toBeAdd);
+        void Handle<T>(Action<T> callback, bool toBeAdd);
         void Fire(NW_ReceiveMessage mesaage);
     }
 
-    public class Handler : IHandler {
+    public class Handler<T> : IHandler where T : class, IMessage {
         public ushort requestProtoType;
         public ushort responseProtoType;
-
-        public Action<IMessage> callback;
+        
         public MessageParser parser;
 
-        public Handler(ushort requestProtoType, ushort responseProtoType, MessageParser parser, Action<IMessage> callback) {
+        public Handler(ushort requestProtoType, ushort responseProtoType, MessageParser parser) {
             this.requestProtoType = requestProtoType;
             this.responseProtoType = responseProtoType;
-            this.callback = callback;
             this.parser = parser;
         }
 
         // T 和 接口的 T这里是故意一样的，否则会编译错误
-        public void Handle(Action<IMessage> callback, bool toBeAdd) {
+        public void Handle<T>(Action<T> callback, bool toBeAdd) {
             NWDelegateService.emiter.Handle(responseProtoType, callback, toBeAdd);
         }
-
+        
         public void Fire(NW_ReceiveMessage message) {
-            if (ProtobufUtils.TryDeserialize<IMessage>(parser, message.bytes, out IMessage msg)) {
+            if (ProtobufUtils.TryDeserialize<T>(parser, message.bytes, out T msg)) {
                 message.bytes = null;
-                callback?.Invoke(msg);
+                NWDelegateService.emiter.Fire<T>(responseProtoType, msg);
             }
         }
 
@@ -44,39 +42,35 @@ public static class NWDelegateService {
     public static readonly DelegateService<ushort> emiter = new DelegateService<ushort>();
 
     // protoType : pb::IMessage
-    private static readonly Dictionary<ushort, Handler> dict = new Dictionary<ushort, Handler>();
+    private static readonly Dictionary<ushort, IHandler> dict = new Dictionary<ushort, IHandler>();
 
     // 设计目的：为了代码review者可以方便得到Request和Response的匹配关系
     // 这里记录requestProtoType的目的是：
     // 1:方便review者可以轻松匹配request和response的关系
     // 2:将来去实现网络等待光圈的时候可以利用这个request对应的response是否进行回复，如果回复，则关闭网络等待ui。 【WaitUI】
-    public static void Add(ushort requestProtoType, ushort responseProtoType, Action<IMessage> callback, MessageParser parser) {
+    public static void Add<T>(ushort requestProtoType, ushort responseProtoType, Action<T> callback, MessageParser parser) where T : class, IMessage {
         // parserDict
         if (!dict.TryGetValue(responseProtoType, out var handler)) {
             // converter只传递一次
-            handler = new Handler(requestProtoType, responseProtoType, parser, callback);
+            handler = new Handler<T>(requestProtoType, responseProtoType, parser);
             dict.Add(responseProtoType, handler);
         }
 
         handler.Handle(callback, true);
     }
 
-    public static void Remove(ushort responseProtoType, Action<IMessage> callback) {
+    public static void Remove<T>(ushort responseProtoType, Action<T> callback) where T : class, IMessage {
         if (dict.TryGetValue(responseProtoType, out var handler)) {
             handler.Handle(callback, false);
         }
     }
-
-    public static bool TryGetHandler(ushort protoType, out Handler handler) {
-        return dict.TryGetValue(protoType, out handler);
-    }
-
-    public static void Handle(ushort requestProtoType, ushort responseProtoType, Action<IMessage> callback, MessageParser parser, bool toBeAdd) {
+    
+    public static void Handle<T>(ushort requestProtoType, ushort responseProtoType, Action<T> callback, MessageParser parser, bool toBeAdd) where T : class, IMessage {
         if (toBeAdd) {
-            Add(requestProtoType, responseProtoType, callback, parser);
+            Add<T>(requestProtoType, responseProtoType, callback, parser);
         }
         else {
-            Remove(responseProtoType, callback);
+            Remove<T>(responseProtoType, callback);
         }
     }
 

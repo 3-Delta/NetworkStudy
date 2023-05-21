@@ -8,8 +8,8 @@ public class Sys_User : SystemBase<Sys_User> {
     public ushort playerID { get; private set; } = 127;
 
     public override void OnInit() {
-        NWDelegateService.Handle((ushort)LC_EProtoType.csLogin, (ushort)LC_EProtoType.scLogin, RespLogin, SCLogin.Parser, true);
-        NWDelegateService.Handle((ushort)LC_EProtoType.csLogout, (ushort)LC_EProtoType.scLogout, RespLogout, SCLogout.Parser, true);
+        NWDelegateService.Handle<SCLogin>((ushort)LC_EProtoType.csLogin, (ushort)LC_EProtoType.scLogin, RespLogin, SCLogin.Parser, true);
+        NWDelegateService.Handle<SCLogout>((ushort)LC_EProtoType.csLogout, (ushort)LC_EProtoType.scLogout, RespLogout, SCLogout.Parser, true);
     }
 
     public void ReqLogin() {
@@ -19,13 +19,13 @@ public class Sys_User : SystemBase<Sys_User> {
         NW_Mgr.Instance.Send(LC_EProtoType.csLogin, cs);
     }
 
-    private void RespLogin(IMessage msg) {
+    private void RespLogin(SCLogin message) {
         UnityEngine.Debug.LogError("RespLogin");
     }
 
     private void ReqLogout(NW_Package package) { }
 
-    private void RespLogout(IMessage msg) {
+    private void RespLogout(SCLogout message) {
         UnityEngine.Debug.LogError("RespLogout");
     }
 }

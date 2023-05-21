@@ -12,7 +12,7 @@ public class Sys_Mail : SystemBase<Sys_Mail> {
     private Map<ulong, MailEntry> mails = new Map<ulong, MailEntry>();
 
     public override void OnInit() {
-        NWDelegateService.Handle((ushort)LC_EProtoType.csReadMail, (ushort)LC_EProtoType.scReadMail, RespReadMail, SCReadMail.Parser, true);
+        NWDelegateService.Handle<SCReadMail>((ushort)LC_EProtoType.csReadMail, (ushort)LC_EProtoType.scReadMail, RespReadMail, SCReadMail.Parser, true);
     }
 
     public void ReqReadMail() {
@@ -2134,7 +2134,7 @@ DontLinger
         NW_Mgr.Instance.Send(LC_EProtoType.csReadMail, cs);
     }
 
-    public void RespReadMail(IMessage msg) {
+    public void RespReadMail(SCReadMail msg) {
         var res = msg as SCReadMail;
         UnityEngine.Debug.LogError("RespReadMail" + res.MailID + " " + res.MailContent.Length + " \n" + res.MailContent);
     }

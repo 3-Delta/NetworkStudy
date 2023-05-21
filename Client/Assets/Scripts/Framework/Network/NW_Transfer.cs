@@ -221,8 +221,8 @@ public class NW_Transfer {
         }
 
         byte[] messageBytes = ProtobufUtils.Serialize(message);
-        Debug.LogError("Send内容长度-> " + messageBytes.Length.ToString());
         int packageCount = Mathf.CeilToInt(1f * messageBytes.Length / NW_Def.PACKAGE_BODY_MAX_SIZE);
+        Debug.LogError("Send内容长度-> " + messageBytes.Length.ToString() + "  分块：" + packageCount.ToString());
         if (packageCount > byte.MaxValue) {
             Debug.LogError($"{protoType.ToString()} 数据包太大，即使切分之后还是过大");
             return;
