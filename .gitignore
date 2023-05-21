@@ -64,3 +64,14 @@
 /Server/Server/.idea/.idea.Server/.idea/indexLayout.xml
 /Server/Server/.idea/.idea.Server/.idea/vcs.xml
 /Server/Server/.idea/.idea.Server/.idea/encodings.xml
+/Client/Assets/Scene/MainSettings.lighting
+/Client/Assets/Scene/MainSettings.lighting.meta
+/Client/Unity.VisualStudio.Editor.csproj
+/Client/UnityEditor.UI.EditorTests.csproj
+/Client/UnityEditor.XR.LegacyInputHelpers.Tests.csproj
+/Client/UnityEngine.SpatialTracking.Player.csproj
+/Client/UnityEngine.SpatialTracking.Tests.csproj
+/Client/UnityEngine.TestRunner.Player.csproj
+/Client/UnityEngine.UI.Player.csproj
+/Client/UnityEngine.UI.Tests.csproj
+/Client/UnityEngine.XR.LegacyInputHelpers.Player.csproj

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class UI_Main : MonoBehaviour {
@@ -9,31 +10,30 @@ public class UI_Main : MonoBehaviour {
     public Button btnLogin;
     public Button btnMail;
     public Button btnLogout;
-    public Button btnLogoutAndLaunch;
+    public Button btnExit;
 
     private void Awake() {
         btnLunch.onClick.AddListener(OnBtnLunchClicked);
         btnLogin.onClick.AddListener(OnBtnLoginClicked);
         btnMail.onClick.AddListener(OnBtnMailClicked);
         btnLogout.onClick.AddListener(OnBtnLogoutClicked);
-        btnLogoutAndLaunch.onClick.AddListener(OnBtnLogoutAndLaunchClicked);
+        this.btnExit.onClick.AddListener(OnBtnLogoutAndLaunchClicked);
     }
 
     private void OnBtnLunchClicked() {
-        NW_Mgr.Instance.Connect(NW_Def.IPv4, NW_Def.PORT);
+        Sys_Login.Instance.Connect();
     }
     private void OnBtnMailClicked() {
         Sys_Mail.Instance.ReqReadMail();
     }
     private void OnBtnLoginClicked() {
-        Sys_User.Instance.ReqLogin();
+        Sys_Login.Instance.ReqLogin();
     }
     private void OnBtnLogoutClicked() {
-        NW_Mgr.Instance.OnExit();
+        Sys_Login.Instance.ReqLogout();
     }
 
     private void OnBtnLogoutAndLaunchClicked() {
-        NW_Mgr.Instance.OnExit();
-        NW_Mgr.Instance.Connect(NW_Def.IPv4, NW_Def.PORT);
+        Sys_Login.Instance.Disconnect();
     }
 }

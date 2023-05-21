@@ -4,21 +4,23 @@ using System;
 using Google.Protobuf;
 using ProtobufNet;
 
-public class Sys_Mail : SystemBase<Sys_Mail> {
+public class Sys_Mail : SystemBase<Sys_Mail>, ISystemNetTransfer {
+    public NW_Transfer nwTransfer { get; set; }
+    
     public class MailEntry {
         public ulong mailID { get; private set; } = 0;
     }
 
     private Map<ulong, MailEntry> mails = new Map<ulong, MailEntry>();
 
-    public override void OnInit() {
-        NWDelegateService.Handle<SCReadMail>((ushort)LC_EProtoType.csReadMail, (ushort)LC_EProtoType.scReadMail, RespReadMail, SCReadMail.Parser, true);
+    public override void OnHandleEvents(bool toRegister) {
+        NWDelegateService.Handle<SCReadMail>((ushort)LC_EProtoType.csReadMail, (ushort)LC_EProtoType.scReadMail, RespReadMail, SCReadMail.Parser, toRegister);
     }
 
     public void ReqReadMail() {
         UnityEngine.Debug.LogError("ReqReadMail");
         CSReadMail cs = new CSReadMail();
-        cs.MailID = 1;
+        cs.MailID = this.RoleId;
         const string CONTENT = @"Socket.Close 方法
 参考
 
@@ -2131,7 +2133,7 @@ DontLinger
 .NET 7 和其他版本
 ";
         cs.MailContent = CONTENT;
-        NW_Mgr.Instance.Send(LC_EProtoType.csReadMail, cs);
+        nwTransfer.Send((ushort)LC_EProtoType.csReadMail, cs);
     }
 
     public void RespReadMail(SCReadMail msg) {

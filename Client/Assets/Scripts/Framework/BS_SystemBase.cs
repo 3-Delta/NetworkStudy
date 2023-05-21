@@ -1,6 +1,9 @@
 ﻿public interface ISystemBaseCallback {
+    ulong RoleId { get; set; } // 各个系统持有roleId
+    
     void OnInit();
-    void OnDispose();
+    void OnExit();
+    void OnHandleEvents(bool toRegister); // 事件监听
 
     void OnLoadINI(ulong roleId); // 从Persistent或者其他文件加载客户端本机的数据
     void OnFenced(); // 登录首包全部接收
@@ -16,11 +19,16 @@ public interface ISystemUpdateCallback : ISystemBaseCallback {
     void OnUpdate();
 }
 
+public interface ISystemNetTransfer {
+    NW_Transfer nwTransfer { get; set; } // 各个系统持有nwTransfer
+}
+
 public class SystemBase : ISystemBaseCallback {
-    public ulong RoleId { get; protected set; } // 各个系统持有roleId
+    public ulong RoleId { get; set; } // 各个系统持有roleId
 
     public virtual void OnInit() { }
-    public virtual void OnDispose() { }
+    public virtual void OnExit() { }
+    public virtual void OnHandleEvents(bool toRegister) { }
 
     public virtual void OnLoadINI(ulong roleId) { }
     public virtual void OnFenced() { }

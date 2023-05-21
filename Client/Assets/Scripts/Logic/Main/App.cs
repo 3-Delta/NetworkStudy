@@ -26,9 +26,7 @@ public class App : MonoBehaviour {
         BS_LogicMgr.Instance.OnExit();
     }
 
-    private void OnApplicationPause(bool pauseStatus) {
-        
-    }
+    private void OnApplicationPause(bool pauseStatus) { }
 
     private void Settings() {
         Application.runInBackground = true;

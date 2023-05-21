@@ -39,7 +39,22 @@ public class NW_Transfer {
 
     }
 
-    public EConnectStatus connectStatus = EConnectStatus.Ready;
+    public Action<NW_Transfer, EConnectStatus, EConnectStatus> onConnectStatusChanged;
+    public EConnectStatus _connectStatus = EConnectStatus.Ready;
+    public EConnectStatus connectStatus {
+        get {
+            return _connectStatus;
+        }
+        private set {
+            if (value != this._connectStatus) {
+                var oldStatus = _connectStatus;
+                _connectStatus = value;
+                onConnectStatusChanged?.Invoke(this, oldStatus, _connectStatus);
+            }
+        }
+    }
+
+    public EDisconnectReason disconnectReason { get; private set; } = EDisconnectReason.Initiative;
 
     public NW_PackageQueue packageQueue { get; private set; } = new NW_PackageQueue();
     public NW_MessageQueue messageQueue { get; private set; } = new NW_MessageQueue();
@@ -83,8 +98,8 @@ public class NW_Transfer {
 
     // 不允许DisConnect之后立即Connect, 因为此时OnReceive的线程在DisConnect之后还在工作还在继续读取缓冲区数据
     // 参数表示手动关闭还是自动关闭
-    public void DisConnect(EDisconnectReason disReason = EDisconnectReason.Initiative /*缺省主动关闭*/) {
-        Debug.LogError($"DisConnect disReason: {disReason.ToString()}, connectStatus: {connectStatus.ToString()}");
+    public void DisConnect(EDisconnectReason disconnectReason = EDisconnectReason.Initiative /*缺省主动关闭*/) {
+        Debug.LogError($"DisConnect disReason: {disconnectReason.ToString()}, connectStatus: {connectStatus.ToString()}");
 
         if (this.connectStatus == EConnectStatus.Ready) {
             return;
@@ -93,14 +108,15 @@ public class NW_Transfer {
         Debug.LogError("DisConnect");
         try {
             // 是否选ShutDown(Both);
-            socket.Close();
+            this.socket.Close();
         }
         catch (Exception ex) {
             Debug.LogError($"DisConnect {ex.Message}");
         }
         finally {
+            this.socket = null;
+            this.disconnectReason = disconnectReason;
             this.connectStatus = EConnectStatus.Ready;
-            socket = null;
         }
     }
 #endregion

@@ -2,7 +2,7 @@
 
 // https://www.jianshu.com/p/fa959d16eaed
 public class NW_Mgr : BS_ManagerBase<NW_Mgr> {
-    private NW_Transfer transfer = new NW_Transfer(null);
+    public NW_Transfer transfer { get; private set; } = new NW_Transfer(null);
 
     public override void OnInit() {
     }

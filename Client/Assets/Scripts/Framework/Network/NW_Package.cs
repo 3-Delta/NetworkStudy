@@ -101,7 +101,7 @@ public struct NW_Package {
     public NW_PackageBody body;
 
     public NW_Package(ushort protoType, byte[] bytes, int beginIndex, ushort length, byte segmentIndex = 0, byte segmentCount = 1) {
-        head = new NW_PackageHead(protoType, length, 0, Sys_User.Instance.playerID, segmentIndex, segmentCount);
+        head = new NW_PackageHead(protoType, length, 0, Sys_Login.Instance.playerID, segmentIndex, segmentCount);
         body = new NW_PackageBody(bytes, beginIndex, beginIndex + length - 1);
     }
 
