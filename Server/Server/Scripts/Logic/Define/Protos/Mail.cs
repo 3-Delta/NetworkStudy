@@ -27,17 +27,18 @@ namespace ProtobufNet {
             "CgpNYWlsLnByb3RvEgxQcm90b2J1Zl9OZXQaDENvbW1vbi5wcm90byJyCgRN",
             "YWlsEg4KBm1haWxJRBgBIAEoBBIQCghzZW5kVGltZRgCIAEoDRIOCgZzZW5k",
             "ZXIYAyABKAwSDwoHY29udGVudBgEIAEoDBInCgthdHRhY2htZW50cxgFIAMo",
-            "CzISLlByb3RvYnVmX05ldC5JdGVtIhwKCkNTUmVhZE1haWwSDgoGbWFpbElE",
-            "GAEgASgEIhwKClNDUmVhZE1haWwSDgoGbWFpbElEGAEgASgEKh8KC01haWxF",
-            "cnJDb2RlEhAKDEhhc0NvbGxlY3RlZBAAKigKDkVNYWlsUmVhZFN0YXRlEgoK",
-            "BlVuUmVhZBAAEgoKBlJlYWRlZBABKjYKFEVNYWlsQXR0YWNobWVudFN0YXRl",
-            "Eg8KC1VuQ29sbGVjdGVkEAASDQoJQ29sbGVjdGVkEAFiBnByb3RvMw=="));
+            "CzISLlByb3RvYnVmX05ldC5JdGVtIjEKCkNTUmVhZE1haWwSDgoGbWFpbElE",
+            "GAEgASgEEhMKC21haWxDb250ZW50GAIgASgJIjEKClNDUmVhZE1haWwSDgoG",
+            "bWFpbElEGAEgASgEEhMKC21haWxDb250ZW50GAIgASgJKh8KC01haWxFcnJD",
+            "b2RlEhAKDEhhc0NvbGxlY3RlZBAAKigKDkVNYWlsUmVhZFN0YXRlEgoKBlVu",
+            "UmVhZBAAEgoKBlJlYWRlZBABKjYKFEVNYWlsQXR0YWNobWVudFN0YXRlEg8K",
+            "C1VuQ29sbGVjdGVkEAASDQoJQ29sbGVjdGVkEAFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::ProtobufNet.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::ProtobufNet.MailErrCode), typeof(global::ProtobufNet.EMailReadState), typeof(global::ProtobufNet.EMailAttachmentState), }, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::ProtobufNet.Mail), global::ProtobufNet.Mail.Parser, new[]{ "MailID", "SendTime", "Sender", "Content", "Attachments" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ProtobufNet.CSReadMail), global::ProtobufNet.CSReadMail.Parser, new[]{ "MailID" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ProtobufNet.SCReadMail), global::ProtobufNet.SCReadMail.Parser, new[]{ "MailID" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::ProtobufNet.CSReadMail), global::ProtobufNet.CSReadMail.Parser, new[]{ "MailID", "MailContent" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ProtobufNet.SCReadMail), global::ProtobufNet.SCReadMail.Parser, new[]{ "MailID", "MailContent" }, null, null, null)
           }));
     }
     #endregion
@@ -323,6 +324,7 @@ namespace ProtobufNet {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public CSReadMail(CSReadMail other) : this() {
       mailID_ = other.mailID_;
+      mailContent_ = other.mailContent_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -342,6 +344,17 @@ namespace ProtobufNet {
       }
     }
 
+    /// <summary>Field number for the "mailContent" field.</summary>
+    public const int MailContentFieldNumber = 2;
+    private string mailContent_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string MailContent {
+      get { return mailContent_; }
+      set {
+        mailContent_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as CSReadMail);
@@ -356,6 +369,7 @@ namespace ProtobufNet {
         return true;
       }
       if (MailID != other.MailID) return false;
+      if (MailContent != other.MailContent) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -363,6 +377,7 @@ namespace ProtobufNet {
     public override int GetHashCode() {
       int hash = 1;
       if (MailID != 0UL) hash ^= MailID.GetHashCode();
+      if (MailContent.Length != 0) hash ^= MailContent.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -380,6 +395,10 @@ namespace ProtobufNet {
         output.WriteRawTag(8);
         output.WriteUInt64(MailID);
       }
+      if (MailContent.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(MailContent);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -390,6 +409,9 @@ namespace ProtobufNet {
       int size = 0;
       if (MailID != 0UL) {
         size += 1 + pb::CodedOutputStream.ComputeUInt64Size(MailID);
+      }
+      if (MailContent.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(MailContent);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -405,6 +427,9 @@ namespace ProtobufNet {
       if (other.MailID != 0UL) {
         MailID = other.MailID;
       }
+      if (other.MailContent.Length != 0) {
+        MailContent = other.MailContent;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -418,6 +443,10 @@ namespace ProtobufNet {
             break;
           case 8: {
             MailID = input.ReadUInt64();
+            break;
+          }
+          case 18: {
+            MailContent = input.ReadString();
             break;
           }
         }
@@ -452,6 +481,7 @@ namespace ProtobufNet {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public SCReadMail(SCReadMail other) : this() {
       mailID_ = other.mailID_;
+      mailContent_ = other.mailContent_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -471,6 +501,17 @@ namespace ProtobufNet {
       }
     }
 
+    /// <summary>Field number for the "mailContent" field.</summary>
+    public const int MailContentFieldNumber = 2;
+    private string mailContent_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string MailContent {
+      get { return mailContent_; }
+      set {
+        mailContent_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as SCReadMail);
@@ -485,6 +526,7 @@ namespace ProtobufNet {
         return true;
       }
       if (MailID != other.MailID) return false;
+      if (MailContent != other.MailContent) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -492,6 +534,7 @@ namespace ProtobufNet {
     public override int GetHashCode() {
       int hash = 1;
       if (MailID != 0UL) hash ^= MailID.GetHashCode();
+      if (MailContent.Length != 0) hash ^= MailContent.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -509,6 +552,10 @@ namespace ProtobufNet {
         output.WriteRawTag(8);
         output.WriteUInt64(MailID);
       }
+      if (MailContent.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(MailContent);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -519,6 +566,9 @@ namespace ProtobufNet {
       int size = 0;
       if (MailID != 0UL) {
         size += 1 + pb::CodedOutputStream.ComputeUInt64Size(MailID);
+      }
+      if (MailContent.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(MailContent);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -534,6 +584,9 @@ namespace ProtobufNet {
       if (other.MailID != 0UL) {
         MailID = other.MailID;
       }
+      if (other.MailContent.Length != 0) {
+        MailContent = other.MailContent;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -547,6 +600,10 @@ namespace ProtobufNet {
             break;
           case 8: {
             MailID = input.ReadUInt64();
+            break;
+          }
+          case 18: {
+            MailContent = input.ReadString();
             break;
           }
         }

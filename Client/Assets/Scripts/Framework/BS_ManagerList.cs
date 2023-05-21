@@ -18,7 +18,6 @@ using UnityEditor;
 
 public static class BS_ManagerList
 {
-    // BS_ManagerMgr��BS_DriveMgr���ܷ���
     public readonly static List<BS_ManagerBaseCallback> list = new List<BS_ManagerBaseCallback>()
     {
         NW_Mgr.Instance,

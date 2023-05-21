@@ -26,4 +26,34 @@ public class NW_Queue
             else { return false; }
         }
     }
+
+    public NW_Package Combine()
+    {
+        lock (packageQueue)
+        {
+            NW_Package pkg = new NW_Package();
+            int i = 0;
+            List<byte> ls = new List<byte>();
+            while (this.packageQueue.Count > 0)
+            {
+                var one = this.packageQueue.Dequeue();
+                if (i == 0)
+                {
+                    pkg.head.protoType = one.head.protoType;
+                    pkg.head.randomKey = one.head.randomKey;
+                    pkg.head.playerID = one.head.playerID;
+                }
+
+                pkg.head.size += one.head.size;
+                if (one.body.bodyBytes != null)
+                {
+                    ls.AddRange(one.body.bodyBytes);
+                }
+                ++i;
+            }
+
+            pkg.body.bodyBytes = ls.ToArray();
+            return pkg;
+        }
+    }
 }

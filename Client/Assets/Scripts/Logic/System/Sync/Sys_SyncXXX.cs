@@ -57,7 +57,7 @@ public class SyncState
 }
 
 // https://www.jianshu.com/p/c1fb23afbabe
-public class Sys_Sync : BS_SystemBase<Sys_Sync>
+public class Sys_Sync : SystemBase<Sys_Sync>
 {
     public static bool isServer = true;
     // 本地预表现，比如本地按键按下的时候立即执行， 而不是等待服务器回包之后执行 

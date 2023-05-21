@@ -17,6 +17,7 @@ public class Sys_Mail : BS_SystemBase<Sys_Mail>
         CSReadMail cs = BS_T_Protobuf.DeSerialize<CSReadMail>(CSReadMail.Parser, package.body.bodyBytes);
         SCReadMail sc = new SCReadMail();
         sc.MailID = 12578;
+        sc.MailContent = "Server: " + cs.MailContent;
         NW_Mgr.Instance.Send(package.head.playerID, LC_EProtoType.scReadMail, sc);
     }
 }

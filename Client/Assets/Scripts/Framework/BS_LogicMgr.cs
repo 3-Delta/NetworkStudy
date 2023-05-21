@@ -6,16 +6,17 @@ public class BS_LogicMgr : Singleton<BS_LogicMgr>
 {
 	public void OnInit()
 	{
-		BS_SystemMgr.Instance.OnInit();
+		SystemMgr.Instance.OnInit();
         BS_ManagerMgr.Instance.OnInit();
         BS_ControllerMgr.Instance.OnInit();
     }
-    public void OnBeforeLogin() { BS_SystemMgr.Instance.OnBeforeLogin(); }
-    public void OnLogin() { BS_SystemMgr.Instance.OnLogin(); }
-    public void OnLogout() { BS_SystemMgr.Instance.OnLogout(); }
+    public void OnBeforeLogin(ulong roleId) { SystemMgr.Instance.OnLoadINI(roleId); }
+    public void OnLogin(ulong roleId) { SystemMgr.Instance.OnLogin(roleId); }
+    public void OnLogout() { SystemMgr.Instance.OnLogout(); }
+    
     public void OnUpdate()
 	{
-		BS_SystemMgr.Instance.OnUpdate();
+		SystemMgr.Instance.OnUpdate();
         BS_ManagerMgr.Instance.OnUpdate();
         BS_ControllerMgr.Instance.OnUpdate();
     }
@@ -25,7 +26,7 @@ public class BS_LogicMgr : Singleton<BS_LogicMgr>
     }
     public void OnExit()
     {
-        BS_SystemMgr.Instance.OnExit();
+        SystemMgr.Instance.OnDispose();
         BS_ManagerMgr.Instance.OnExit();
         BS_ControllerMgr.Instance.OnExit();
     }

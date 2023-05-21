@@ -31,9 +31,11 @@ message Mail
 message CSReadMail
 {
 	uint64 mailID = 1;
+	string mailContent = 2;
 }
 
 message SCReadMail
 {
 	uint64 mailID = 1;
+	string mailContent = 2;
 }

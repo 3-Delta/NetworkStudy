@@ -60,3 +60,7 @@
 /Client/UnityEngine.TestRunner.csproj
 /Client/UnityEngine.UI.csproj
 /Client/UnityEngine.XR.LegacyInputHelpers.csproj
+/Server/Server/.idea/.idea.Server/.idea/.gitignore
+/Server/Server/.idea/.idea.Server/.idea/indexLayout.xml
+/Server/Server/.idea/.idea.Server/.idea/vcs.xml
+/Server/Server/.idea/.idea.Server/.idea/encodings.xml

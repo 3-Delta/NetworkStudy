@@ -10,8 +10,8 @@ using Google.Protobuf;
 public class NW_Mgr : BS_ManagerBase<NW_Mgr>
 {
     private Socket socket;
-    public Map<short, NW_Transfer> clients { get; private set; } = new Map<short, NW_Transfer>();
-    public Map<NW_Transfer, short> transfers { get; private set; } = new Map<NW_Transfer, short>();
+    public Map<ushort, NW_Transfer> clients { get; private set; } = new Map<ushort, NW_Transfer>();
+    public Map<NW_Transfer, ushort> transfers { get; private set; } = new Map<NW_Transfer, ushort>();
 
     public override void OnInit()
     {
@@ -80,7 +80,7 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
     private void OnConnectLost(NW_Transfer transfer)
     {
         Console.WriteLine("OnConnectLost --> transfer " + transfer.ToString());
-        short playerID = transfers[transfer];
+        ushort playerID = transfers[transfer];
         clients.Remove(playerID);
         transfers.Remove(transfer);
         transfer.DisConnect();
@@ -88,16 +88,31 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr>
     #endregion
 
     #region // 发数据包
-    public void Send(short playerID, LC_EProtoType protoType, IMessage message)
+    public void Send(ushort playerID, LC_EProtoType protoType, IMessage message)
     {
-        using (System.IO.MemoryStream strenm = new System.IO.MemoryStream())
+        using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
         {
-            message.WriteTo(strenm);
-            if(playerID == -1) { foreach(var kvp in clients.dict) { kvp.Value.Send((short)protoType, strenm.ToArray()); } }
-            else { Send(playerID, protoType, strenm.ToArray()); }
+            message.WriteTo(stream);
+            if (playerID == ushort.MaxValue)
+            {
+                foreach (var kvp in clients.dict)
+                {
+                    kvp.Value.Send((ushort)protoType, stream.ToArray());
+                }
+            }
+            else
+            {
+                Send(playerID, protoType, stream.ToArray());
+            }
         }
     }
-    private void Send(short playerID, LC_EProtoType protoType, byte[] bytes) { Send(playerID, (short)protoType, bytes); }
-    private void Send(short playerID, short protoType, byte[] bytes) { clients[playerID]?.Send(protoType, bytes); }
+    private void Send(ushort playerID, LC_EProtoType protoType, byte[] bytes)
+    {
+        Send(playerID, (ushort)protoType, bytes);
+    }
+    private void Send(ushort playerID, ushort protoType, byte[] bytes)
+    {
+        clients[playerID]?.Send(protoType, bytes);
+    }
     #endregion
 }

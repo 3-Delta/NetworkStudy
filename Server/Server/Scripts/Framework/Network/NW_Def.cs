@@ -10,7 +10,8 @@ public class NW_Def
     public const int PORT = 20086;
     public static int ListenMax = 1000;
 
-    public const int PACKAGE_HEAD_SIZE = sizeof(short) + sizeof(short) + sizeof(short);
-    public const int PACKAGE_BODY_MAX_SIZE = 1024 * 8;
+    // 单位都是字节
+    public const int PACKAGE_HEAD_SIZE = sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(byte) + sizeof(byte);
+    public const int PACKAGE_BODY_MAX_SIZE = ushort.MaxValue;
     public const int PACKAGE_MAX_SIZE = PACKAGE_HEAD_SIZE + PACKAGE_BODY_MAX_SIZE;
 }

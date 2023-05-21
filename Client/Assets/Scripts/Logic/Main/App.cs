@@ -1,37 +1,38 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class App : MonoBehaviour
-{
-    private void Awake()
-    {
+public class App : MonoBehaviour {
+    private void Awake() {
         Init();
     }
-    private void Init()
-    {
+
+    private void Init() {
         Settings();
         RegisterCallback();
         BS_LogicMgr.Instance.OnInit();
     }
-    private void Update()
-    {
+
+    private void Update() {
         BS_LogicMgr.Instance.OnUpdate();
     }
-    private void FixedUpdate()
-    {
+
+    private void FixedUpdate() {
         BS_LogicMgr.Instance.OnFixedUpdate(Time.fixedDeltaTime);
     }
-    private void OnApplicationQuit()
-    {
+
+    private void OnApplicationQuit() {
         BS_LogicMgr.Instance.OnExit();
     }
 
-    private void Settings()
-    {
+    private void OnApplicationPause(bool pauseStatus) {
+        
+    }
+
+    private void Settings() {
         Application.runInBackground = true;
     }
-    private void RegisterCallback()
-    {
-    }
+
+    private void RegisterCallback() { }
 }

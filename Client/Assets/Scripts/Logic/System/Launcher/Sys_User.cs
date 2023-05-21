@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System;
 using ProtobufNet;
 
-public class Sys_Player : BS_SystemBase<Sys_Player>
+public class Sys_User : SystemBase<Sys_User>
 {
-    public short playerID { get; private set; } = 127; 
+    public ushort playerID { get; private set; } = 127; 
 
     public override void OnInit()
     {
@@ -23,7 +23,7 @@ public class Sys_Player : BS_SystemBase<Sys_Player>
     private void RespLogin(NW_Package package)
     {
         UnityEngine.Debug.LogError("RespLogin");
-        SCLogin sc = BS_T_Protobuf.DeSerialize<SCLogin>(SCLogin.Parser, package.body.bodyBytes);
+        SCLogin sc = ProtobufUtils.DeSerialize<SCLogin>(SCLogin.Parser, package.body.bodyBytes);
     }
 
     private void ReqLogout(NW_Package package)
@@ -31,6 +31,6 @@ public class Sys_Player : BS_SystemBase<Sys_Player>
     }
     private void RespLogout(NW_Package package)
     {
-        SCLogout sc = BS_T_Protobuf.DeSerialize<SCLogout>(SCLogout.Parser, package.body.bodyBytes);
+        SCLogout sc = ProtobufUtils.DeSerialize<SCLogout>(SCLogout.Parser, package.body.bodyBytes);
     }
 }

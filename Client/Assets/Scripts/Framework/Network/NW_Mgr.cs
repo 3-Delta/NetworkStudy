@@ -21,15 +21,15 @@ public class NW_Mgr : BS_ManagerBase<NW_Mgr> {
         this.transfer.Connect(ip, port, callback);
     }
     public void Send(LC_EProtoType protoType, IMessage message) {
-        byte[] bytes = BS_T_Protobuf.Serialize(message);
+        byte[] bytes = ProtobufUtils.Serialize(message);
         if (bytes != null) {
             this.Send(protoType, bytes);
         }
     }
     private void Send(LC_EProtoType protoType, byte[] bytes) {
-        this.Send((short)protoType, bytes);
+        this.Send((ushort)protoType, bytes);
     }
-    private void Send(short protoType, byte[] bytes) {
+    private void Send(ushort protoType, byte[] bytes) {
         this.transfer.Send(protoType, bytes);
     }
 }
