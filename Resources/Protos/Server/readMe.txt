@@ -1,0 +1,1 @@
+server内部之间交互的协议，比如gameserver和sceneServer，gameserver和loginServer， gameserver和saveServer(存档服务器)之间的协议交互
