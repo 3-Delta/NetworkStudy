@@ -41,10 +41,9 @@ public class NW_Transfer {
 
     public Action<NW_Transfer, EConnectStatus, EConnectStatus> onConnectStatusChanged;
     public EConnectStatus _connectStatus = EConnectStatus.Ready;
+
     public EConnectStatus connectStatus {
-        get {
-            return _connectStatus;
-        }
+        get { return _connectStatus; }
         private set {
             if (value != this._connectStatus) {
                 var oldStatus = _connectStatus;
@@ -61,8 +60,11 @@ public class NW_Transfer {
 
     private NW_Buffer buffer = new NW_Buffer();
 
-    public NW_Transfer(Socket socket) {
+    public NW_HeartBeat heartBeat { get; set; }
+
+    public NW_Transfer(Socket socket, NW_HeartBeat heartBeat = null) {
         this.socket = socket;
+        this.heartBeat = heartBeat;
     }
 
     public void OnExit() {
@@ -223,7 +225,7 @@ public class NW_Transfer {
         }
         catch (Exception e) {
             this.DisConnect(EDisconnectReason.ReceiveBodyFail);
-            UnityEngine.Debug.Log("OnReceivedBody Failed : " + e.Message);
+            Debug.Log("OnReceivedBody Failed : " + e.Message);
         }
     }
 #endregion
@@ -292,8 +294,10 @@ public class NW_Transfer {
     }
 
     public void Update() {
+        this.heartBeat?.TrySend();
         if (this.messageQueue.Count > 0) {
             if (this.messageQueue.Dequeue(out NW_ReceiveMessage message)) {
+                this.heartBeat?.TryReceive(message.protoType);
                 NWDelegateService.Fire(message.protoType, message);
             }
         }
